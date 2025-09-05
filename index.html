@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kariyer Rehberi & Meslek Seçim Sihirbazı - Lolonolo</title>
+    
+    <link rel="icon" type="image/png" href="https://lolonolo.com/wp-content/uploads/2025/04/lolonolo-favicon.png">
+    <link rel="apple-touch-icon" href="https://lolonolo.com/wp-content/uploads/2025/04/lolonolo-favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://the.gatekeeperconsent.com/cmp.min.js" async></script>
+    <script src="https://the.gatekeeperconsent.com/ccpa/v2/standalone.js" async></script>
+    <script src="//www.ezojs.com/ezoic/sa.min.js" async></script>
+    <script async src="https://fundingchoicesmessages.google.com/i/pub-6517205438926212?ers=1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E3VBQV8L46"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-E3VBQV8L46');
+    </script>
+    <script>
+      window.ezstandalone = window.ezstandalone || {};
+      ezstandalone.cmd = ezstandalone.cmd || [];
+    </script>
+</head>
+<body>
+
+    <header class="page-header">
+        <button class="hamburger-btn" id="hamburger-btn">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar-nav" id="side-menu">
+            <h3>Lolonolo Kaynakları</h3>
+            <ul>
+                <li><a href="https://lolonolo.com" target="_blank">Tüm Çıkmış Sınav Soruları</a></li>
+                <li><a href="https://www.shopier.com/lolonolo" target="_blank">Premium Üyelik</a></li>
+                <li><a href="https://openvideo.lolonolo.com/" target="_blank">Youtube Soru Videoları</a></li>
+                <li><a href="https://www.instagram.com/lolonolo_com" target="_blank">Destek (Instagram)</a></li>
+                <li><a href="mailto:lolonolo@lolonolo.com">İletişim (E-posta)</a></li>
+            </ul>
+        </aside>
+
+        <main class="wizard-wrapper">
+            <div class="wizard-card">
+                <div class="wizard-header">
+                    <h2>Akıllı Meslek Seçim Sihirbazı</h2>
+                    <p>Birkaç basit soruyla sana en uygun meslekleri ve bölümleri keşfedelim!</p>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-bar-inner" id="progress-bar" style="width: 25%;"></div>
+                </div>
+
+                <div class="wizard-body">
+                    <div id="question-container">
+                        <h3 id="question-text">1. En başarılı olduğun ders grubu hangisi?</h3>
+                        <div class="options-container" id="options-container">
+                            <label class="option-label">
+                                <input type="radio" name="q1" value="sayisal">
+                                <span>Matematik, Fizik (Sayısal)</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="q1" value="sozel">
+                                <span>Edebiyat, Tarih (Sözel)</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="q1" value="esit_agirlik">
+                                <span>Matematik, Edebiyat (Eşit Ağırlık)</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="q1" value="dil">
+                                <span>İngilizce, Almanca (Dil)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="result-container" style="display: none;">
+                        </div>
+
+                </div>
+
+                <div class="wizard-footer">
+                    <button id="next-btn" class="primary-btn">Sonraki Soru →</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof ezstandalone !== 'undefined') {
+            ezstandalone.cmd.push(function() {
+                ezstandalone.enable();
+                ezstandalone.display();
+            });
+        }
+    });
+    </script>
+    <div><script data-ezscrex="false" data-cfasync="false">(window.humixPlayers = window.humixPlayers || []).push({target: document.currentScript});</script>
+        <script async data-ezscrex="false" data-cfasync="false" src="https://www.humix.com/video.js"></script>
+    </div>
+</body>
+</html>
