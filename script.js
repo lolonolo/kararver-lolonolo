@@ -8,42 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- SİHİRBAZ VERİTABANI ---
     const quizQuestions = [
-        {
-            question: "En başarılı olduğun ders grubu hangisi?",
-            key: "puan_turu",
-            options: [
-                { text: "Matematik, Fizik (Sayısal)", value: "sayisal" },
-                { text: "Edebiyat, Tarih (Sözel)", value: "sozel" },
-                { text: "Matematik, Edebiyat (Eşit Ağırlık)", value: "esit_agirlik" },
-                { text: "İngilizce, Almanca (Dil)", value: "dil" }
-            ]
-        },
-        {
-            question: "Nasıl bir çalışma ortamını tercih edersin?",
-            key: "calisma_ortami",
-            options: [
-                { text: "İnsanlarla sürekli iletişim halinde, dinamik bir ortam.", value: "insan_odakli" },
-                { text: "Kendi başıma odaklanabileceğim, sakin bir ofis.", value: "ofis" },
-                { text: "Atölye, laboratuvar veya stüdyo gibi teknik bir ortam.", value: "teknik" },
-                { text: "Masa başında değil, dışarıda, sahada olacağım bir ortam.", value: "saha" }
-            ]
-        },
-        {
-            question: "Bir sorunu çözerken hangi yönün daha ağır basar?",
-            key: "yaklasim_tarzi",
-            options: [
-                { text: "Analitik düşünür, verileri ve mantığı kullanırım.", value: "analitik" },
-                { text: "Yaratıcılığımı ve hayal gücümü kullanırım.", value: "yaratici" },
-                { text: "Empati kurar, insan odaklı çözümler üretirim.", value: "empati" }
-            ]
-        }
+        // ... (sorular aynı kalacak) ...
     ];
-
-    let professions = []; // Meslekleri bu boş diziye yükleyeceğiz
+    let professions = [];
 
     // --- SİHİRBAZ MANTIĞI ---
     let currentQuestionIndex = 0;
-    const userAnswers = {};
+    let userAnswers = {}; // userAnswers'ı burada tanımla
 
     const questionTextEl = document.getElementById('question-text');
     const optionsContainerEl = document.getElementById('options-container');
@@ -52,20 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionContainer = document.getElementById('question-container');
     const resultContainer = document.getElementById('result-container');
 
-    // VERİTABANINI YÜKLEYİP SİHİRBAZI BAŞLATAN ANA FONKSİYON
     async function initializeWizard() {
         try {
             const response = await fetch('professions.json');
             professions = await response.json();
-            showQuestion(); // Veriler yüklendikten sonra ilk soruyu göster
+            showQuestion();
         } catch (error) {
             console.error("Meslek veritabanı yüklenemedi:", error);
-            questionContainer.innerHTML = "<h3>Veriler yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</h3>";
+            questionContainer.innerHTML = "<h3>Veriler yüklenirken bir hata oluştu.</h3>";
         }
     }
 
     function showQuestion() {
-        document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+        resultContainer.style.display = 'none'; // Sonuçları gizle
+        questionContainer.style.display = 'block';
+        nextBtn.style.display = 'block';
+
         const currentQuestion = quizQuestions[currentQuestionIndex];
         questionTextEl.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
         
@@ -79,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
         progressBar.style.width = `${progress}%`;
+        progressBar.style.backgroundColor = '#ffab40'; // Rengi normale döndür
 
         if (currentQuestionIndex === quizQuestions.length - 1) {
             nextBtn.textContent = 'Sonuçları Gör ✨';
@@ -102,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResults(sortedProfessions.slice(0, 3));
     }
     
+    // GÜNCELLENDİ - Başa Dön Butonu Eklendi
     function displayResults(results) {
         questionContainer.style.display = 'none';
         nextBtn.style.display = 'none';
@@ -111,12 +86,20 @@ document.addEventListener('DOMContentLoaded', () => {
             <ul class="result-list">
                 ${results.map(result => `<li>${result.name}</li>`).join('')}
             </ul>
-            <p class="result-info">Bu öneriler, verdiğin cevaplara göre bir başlangıç noktasıdır. Meslekleri daha detaylı araştırmayı unutma!</p>
+            <p class="result-info">Bu öneriler, bir başlangıç noktasıdır. Meslekleri daha detaylı araştırmayı unutma!</p>
+            <button id="restart-btn" class="secondary-btn">‹ Tekrar Dene</button>
         `;
         resultContainer.style.display = 'block';
 
         progressBar.style.width = `100%`;
         progressBar.style.backgroundColor = '#4caf50';
+
+        // Başa dön butonuna olay dinleyici ekle
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            showQuestion();
+        });
     }
 
     nextBtn.addEventListener('click', () => {
@@ -143,6 +126,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Sayfa yüklendiğinde her şeyi başlat
     initializeWizard();
 });
