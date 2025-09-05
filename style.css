@@ -103,3 +103,26 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--body-bg); col
     left: 0;
     top: 0;
 }
+/* YENİ EKLENEN İKON STİLLERİ */
+.article-title, .article-subtitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: var(--primary-color);
+}
+
+.feature-list li::before {
+    content: '✓'; /* Daha basit ve her yerde çalışan bir tik işareti */
+    color: var(--primary-color);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
