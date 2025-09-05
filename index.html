@@ -16,23 +16,15 @@
     <script src="https://the.gatekeeperconsent.com/ccpa/v2/standalone.js" async></script>
     <script src="//www.ezojs.com/ezoic/sa.min.js" async></script>
     <script async src="https://fundingchoicesmessages.google.com/i/pub-6517205438926212?ers=1"></script>
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8DC8S6ZZEP"></script>
-   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8DC8S6ZZEP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-8DC8S6ZZEP');
-</script>
-   
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-E3VBQV8L46');
+      gtag('config', 'G-8DC8S6ZZEP');
     </script>
+    
     <script>
       window.ezstandalone = window.ezstandalone || {};
       ezstandalone.cmd = ezstandalone.cmd || [];
@@ -48,6 +40,7 @@
 
     <div class="main-layout">
         <aside class="sidebar-nav" id="side-menu">
+            <div id="ezoic-pub-ad-placeholder-848"></div>
             <h3>Lolonolo Kaynakları</h3>
             <ul>
                 <li><a href="https://lolonolo.com" target="_blank">Tüm Çıkmış Sınav Soruları</a></li>
@@ -73,28 +66,14 @@
                     <div id="question-container">
                         <h3 id="question-text">1. En başarılı olduğun ders grubu hangisi?</h3>
                         <div class="options-container" id="options-container">
-                            <label class="option-label">
-                                <input type="radio" name="q1" value="sayisal">
-                                <span>Matematik, Fizik (Sayısal)</span>
-                            </label>
-                            <label class="option-label">
-                                <input type="radio" name="q1" value="sozel">
-                                <span>Edebiyat, Tarih (Sözel)</span>
-                            </label>
-                            <label class="option-label">
-                                <input type="radio" name="q1" value="esit_agirlik">
-                                <span>Matematik, Edebiyat (Eşit Ağırlık)</span>
-                            </label>
-                            <label class="option-label">
-                                <input type="radio" name="q1" value="dil">
-                                <span>İngilizce, Almanca (Dil)</span>
-                            </label>
+                            <label class="option-label"><input type="radio" name="q1" value="sayisal"><span>Matematik, Fizik (Sayısal)</span></label>
+                            <label class="option-label"><input type="radio" name="q1" value="sozel"><span>Edebiyat, Tarih (Sözel)</span></label>
+                            <label class="option-label"><input type="radio" name="q1" value="esit_agirlik"><span>Matematik, Edebiyat (Eşit Ağırlık)</span></label>
+                            <label class="option-label"><input type="radio" name="q1" value="dil"><span>İngilizce, Almanca (Dil)</span></label>
                         </div>
                     </div>
                     
-                    <div id="result-container" style="display: none;">
-                        </div>
-
+                    <div id="result-container" style="display: none;"></div>
                 </div>
 
                 <div class="wizard-footer">
@@ -106,7 +85,7 @@
     
     <script src="script.js"></script>
     
-     <script>
+    <script>
     document.addEventListener("DOMContentLoaded", function() {
         if (typeof ezstandalone !== 'undefined') {
             ezstandalone.cmd.push(function() {
@@ -114,27 +93,6 @@
                 ezstandalone.display();
             });
         }
-
-        setTimeout(function() {
-            var fcScript = document.createElement('script');
-            fcScript.src = "https://fundingchoicesmessages.google.com/i/pub-6517205438926212?ers=1";
-            fcScript.async = true;
-            document.head.appendChild(fcScript);
-
-            function signalGooglefcPresent() {
-                if (!window.frames['googlefcPresent']) {
-                    if (document.body) {
-                        const iframe = document.createElement('iframe');
-                        iframe.name = 'googlefcPresent';
-                        iframe.style.display = 'none';
-                        document.body.appendChild(iframe);
-                    } else {
-                        setTimeout(signalGooglefcPresent, 0);
-                    }
-                }
-            }
-            signalGooglefcPresent();
-        }, 5000);
     });
     </script>
     <div><script data-ezscrex="false" data-cfasync="false">(window.humixPlayers = window.humixPlayers || []).push({target: document.currentScript});</script>
