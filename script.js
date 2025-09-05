@@ -6,30 +6,29 @@ document.addEventListener('DOMContentLoaded', () => {
         sideMenu.classList.toggle('is-open');
     });
 
-    // --- SİHİRBAZ MANTIĞI (SONRAKİ ADIMDA EKLENECEK) ---
-
-    // Seçeneklere tıklandığında görsel olarak seçili hale getirme
+    // --- SİHİRBAZ GÖRSEL MANTIĞI ---
     const optionsContainer = document.getElementById('options-container');
-    optionsContainer.addEventListener('click', (e) => {
-        if (e.target.closest('.option-label')) {
-            // Önce tüm seçili stilleri kaldır
-            document.querySelectorAll('.option-label').forEach(label => {
-                label.classList.remove('selected');
-            });
-            // Tıklananı seçili yap
-            e.target.closest('.option-label').classList.add('selected');
-        }
-    });
+    if (optionsContainer) {
+        optionsContainer.addEventListener('click', (e) => {
+            const label = e.target.closest('.option-label');
+            if (label) {
+                document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+                label.classList.add('selected');
+            }
+        });
+    }
 
-    // "Sonraki Soru" butonuna şimdilik sadece bir log yazdıralım
+    // "Sonraki Soru" butonu için temel işlevsellik
     const nextBtn = document.getElementById('next-btn');
-    nextBtn.addEventListener('click', () => {
-        const selectedOption = document.querySelector('input[name="q1"]:checked');
-        if (selectedOption) {
-            console.log("Seçilen cevap:", selectedOption.value);
-            alert("Harika! Bir sonraki adımda bu cevaba göre yeni sorular getireceğiz.");
-        } else {
-            alert("Lütfen bir seçenek belirleyin.");
-        }
-    });
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const selectedOption = document.querySelector('input[name="q1"]:checked');
+            if (selectedOption) {
+                console.log("Seçilen cevap:", selectedOption.value);
+                alert("Harika! Bir sonraki adımda bu cevaba göre sihirbazı ilerleteceğiz.");
+            } else {
+                alert("Lütfen bir seçenek belirleyin.");
+            }
+        });
+    }
 });
