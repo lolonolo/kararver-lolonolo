@@ -16,7 +16,17 @@
     <script src="https://the.gatekeeperconsent.com/ccpa/v2/standalone.js" async></script>
     <script src="//www.ezojs.com/ezoic/sa.min.js" async></script>
     <script async src="https://fundingchoicesmessages.google.com/i/pub-6517205438926212?ers=1"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E3VBQV8L46"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8DC8S6ZZEP"></script>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8DC8S6ZZEP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8DC8S6ZZEP');
+</script>
+   
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -96,7 +106,7 @@
     
     <script src="script.js"></script>
     
-    <script>
+     <script>
     document.addEventListener("DOMContentLoaded", function() {
         if (typeof ezstandalone !== 'undefined') {
             ezstandalone.cmd.push(function() {
@@ -104,6 +114,27 @@
                 ezstandalone.display();
             });
         }
+
+        setTimeout(function() {
+            var fcScript = document.createElement('script');
+            fcScript.src = "https://fundingchoicesmessages.google.com/i/pub-6517205438926212?ers=1";
+            fcScript.async = true;
+            document.head.appendChild(fcScript);
+
+            function signalGooglefcPresent() {
+                if (!window.frames['googlefcPresent']) {
+                    if (document.body) {
+                        const iframe = document.createElement('iframe');
+                        iframe.name = 'googlefcPresent';
+                        iframe.style.display = 'none';
+                        document.body.appendChild(iframe);
+                    } else {
+                        setTimeout(signalGooglefcPresent, 0);
+                    }
+                }
+            }
+            signalGooglefcPresent();
+        }, 5000);
     });
     </script>
     <div><script data-ezscrex="false" data-cfasync="false">(window.humixPlayers = window.humixPlayers || []).push({target: document.currentScript});</script>
