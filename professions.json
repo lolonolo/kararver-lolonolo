@@ -1,0 +1,72 @@
+[
+    {
+      "name": "Yazılım Geliştirici",
+      "puan_turu": "sayisal", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik",
+      "description": "Web siteleri, mobil uygulamalar ve bilgisayar programları tasarlayan, kodlayan ve test eden kişidir."
+    },
+    {
+      "name": "Doktor (Tıp)",
+      "puan_turu": "sayisal", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "analitik",
+      "description": "İnsan sağlığını korumak, hastalıkları teşhis ve tedavi etmek için çalışan tıp uzmanıdır."
+    },
+    {
+      "name": "Avukat",
+      "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
+      "description": "Hukuki konularda danışmanlık yapan, bireyleri veya kurumları mahkemede temsil eden hukuk uzmanıdır."
+    },
+    {
+      "name": "Grafik Tasarımcı",
+      "puan_turu": "esit_agirlik", "calisma_ortami": "teknik", "yaklasim_tarzi": "yaratici",
+      "description": "Görsel iletişim materyalleri (logo, afiş, web sitesi arayüzü vb.) tasarlayan yaratıcı profesyoneldir."
+    },
+    {
+      "name": "Psikolog",
+      "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
+      "description": "İnsanların zihinsel ve duygusal sorunlarını anlamalarına ve çözmelerine yardımcı olan uzmandır."
+    },
+    {
+      "name": "Tarihçi / Arkeolog",
+      "puan_turu": "sozel", "calisma_ortami": "saha", "yaklasim_tarzi": "analitik",
+      "description": "Geçmiş olayları, kültürleri ve kalıntıları araştıran, analiz eden ve yorumlayan bilim insanıdır."
+    },
+    {
+      "name": "Reklamcı / Halkla İlişkiler Uzmanı",
+      "puan_turu": "sozel", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "yaratici",
+      "description": "Bir markanın veya kişinin kamuoyundaki imajını yöneten, yaratıcı kampanyalar tasarlayan iletişim profesyonelidir."
+    },
+    {
+      "name": "Mütercim-Tercüman",
+      "puan_turu": "dil", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik",
+      "description": "Yazılı veya sözlü metinleri bir dilden diğerine profesyonel olarak çeviren dil uzmanıdır."
+    },
+    {
+      "name": "Diş Hekimi",
+      "puan_turu": "sayisal", "calisma_ortami": "teknik", "yaklasim_tarzi": "analitik",
+      "description": "Ağız ve diş sağlığı üzerine çalışan, tedavi ve estetik uygulamalar yapan tıp uzmanıdır."
+    },
+    {
+      "name": "İç Mimar",
+      "puan_turu": "esit_agirlik", "calisma_ortami": "teknik", "yaklasim_tarzi": "yaratici",
+      "description": "Mekanların içini estetik ve fonksiyonel olarak tasarlayan, planlayan ve dekore eden uzmandır."
+    },
+    {
+      "name": "Öğretmen",
+      "puan_turu": "sozel", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
+      "description": "Belirli bir alanda öğrencilere eğitim ve öğretim veren eğitim profesyonelidir."
+    },
+    {
+      "name": "İnşaat Mühendisi",
+      "puan_turu": "sayisal", "calisma_ortami": "saha", "yaklasim_tarzi": "analitik",
+      "description": "Bina, köprü, yol gibi yapıların tasarımını, inşasını ve denetimini yapan mühendistir."
+    },
+    {
+      "name": "Pilot",
+      "puan_turu": "sayisal", "calisma_ortami": "teknik", "yaklasim_tarzi": "analitik",
+      "description": "Hava taşıtlarını (uçak, helikopter vb.) profesyonel olarak kullanan kişidir."
+    },
+    {
+      "name": "Aşçı / Gastronomi Uzmanı",
+      "puan_turu": "sozel", "calisma_ortami": "teknik", "yaklasim_tarzi": "yaratici",
+      "description": "Yemek pişirme sanatı ve bilimi üzerine uzmanlaşmış, yaratıcı menüler oluşturan mutfak profesyonelidir."
+    }
+]
