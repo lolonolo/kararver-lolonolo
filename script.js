@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizData = {
         lise: [
             { id: 'start', question: "Nasıl bir üniversite hayatı hedefliyorsun?", key: "egitim-turu", next: (answer) => answer === 'acikogretim' ? 'acikogretim_universiteleri' : 'henuz_hazir_degil' },
-            { id: 'acikogretim_universiteleri', question: "Hangi Açıköğretim Fakültesi?", key: "acikogretim-universiteleri", next: (answer) => answer === 'auzef' ? 'auzef_bolumleri' : 'henuz_hazir_degil' },
+            { id: 'acikogretim_universiteleri', question: "Harika! Peki hangi Açıköğretim Fakültesi ile daha çok ilgileniyorsun?", key: "acikogretim-universiteleri", next: (answer) => answer === 'auzef' ? 'auzef_bolumleri' : 'henuz_hazir_degil' },
             { 
                 id: 'auzef_bolumleri', 
                 question: "AUZEF için hangi bölümü düşünüyorsun?", 
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'henuz_hazir_degil', question: "Bu dal henüz yapım aşamasında!", key: "bitti", options: [], next: () => null }
         ]
     };
-
+    
     // --- OLAY DİNLEYİCİLER VE ANA FONKSİYONLAR ---
     startQuizBtn.addEventListener('click', () => {
         userProfile = document.querySelector('input[name="user_profile"]:checked').value;
@@ -84,12 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function showQuestionById(id) {
         currentQuestionNode = quizData[userProfile].find(q => q.id === id);
         if (!currentQuestionNode) {
-            // ...
+            alert("Bu dalın sonuna geldik!");
             return;
         }
 
         // Eğer bir önceki adım anketin sonuysa, sonuç ekranını göster
-        if(currentQuestionNode.next(userAnswers[currentQuestionNode.key]) === null) {
+        const nextStep = currentQuestionNode.next ? currentQuestionNode.next(userAnswers[currentQuestionNode.key]) : null;
+        if(nextStep === null) {
             displayFinalResult();
             return;
         }
@@ -98,7 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
         optionsContainerEl.innerHTML = '';
         infoBoxEl.style.display = 'none';
         
-        currentQuestionNode.options.forEach(option => {
+        const optionsList = currentQuestionNode.options || [];
+        optionsList.forEach(option => {
             const label = document.createElement('label');
             label.className = 'option-label';
             label.innerHTML = `<input type="radio" name="${currentQuestionNode.key}" value="${option.value}"><span>${option.text}</span>`;
@@ -121,18 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const bolumOption = quizData.lise.find(q => q.id === 'auzef_bolumleri').options.find(opt => opt.value === selectedBolumValue);
         const bolumText = bolumOption ? bolumOption.text : "seçtiğin bölüm";
         const lolonoloLink = `https://lolonolo.com/auzef/${selectedBolumValue}/`;
-        // AUZEF linkini oluşturmak için daha sonra bir arama veya API gerekebilir, şimdilik placeholder
         const auzefLink = `https://auzef.istanbul.edu.tr/tr/program/${selectedBolumValue.replace(/-/g, ' ')}`;
 
-
         questionTextEl.textContent = "Harika bir seçim!";
-        optionsContainerEl.innerHTML = `
-            <div class="final-result-container">
+        optionsContainerEl.innerHTML = `<div class="final-result-container">
                 <p>Seçtiğin bölüm olan <strong>${bolumText}</strong> hakkında daha fazla bilgi almak ve sınavlara hazırlanmak için aşağıdaki kaynakları kullanabilirsin.</p>
                 <a href="${lolonoloLink}" target="_blank" class="info-link">Lolonolo Ders Notları →</a>
                 <a href="${auzefLink}" target="_blank" class="info-link">AUZEF Resmi Sayfası →</a>
-            </div>
-        `;
+            </div>`;
+        infoBoxEl.style.display = 'none';
         nextBtn.textContent = '‹ Başa Dön';
         nextBtn.onclick = () => {
             quizScreen.style.display = 'none';
@@ -142,10 +141,30 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    async function loadInfoContent(questionKey, optionValue) { /* ... (aynı) ... */ }
-    function nextButtonClickHandler() { /* ... (aynı) ... */ }
-    
-    // Olay dinleyicileri ve diğer fonksiyonların tam hali
+    async function loadInfoContent(questionKey, optionValue) {
+        let filePath = '';
+        
+        // Hangi soruya göre hangi klasör yapısını kullanacağımızı burada belirliyoruz
+        if (questionKey === 'acikogretim-universiteleri') {
+            filePath = `content/acikogretim-universiteleri/${optionValue}/${optionValue}.html`;
+        } else if (questionKey === 'auzef-bolumleri') {
+            filePath = `content/acikogretim-universiteleri/auzef/${optionValue}.html`;
+        } else {
+            filePath = `content/${questionKey}/${optionValue}.html`;
+        }
+
+        try {
+            const response = await fetch(filePath);
+            if (!response.ok) { throw new Error(`Dosya bulunamadı: ${filePath}`); }
+            const content = await response.text();
+            infoBoxEl.innerHTML = content;
+            infoBoxEl.style.display = 'block';
+        } catch (error) {
+            console.error("Bilgi içeriği yüklenemedi:", error);
+            infoBoxEl.style.display = 'none';
+        }
+    }
+
     optionsContainerEl.addEventListener('click', (e) => {
         const label = e.target.closest('.option-label');
         if (label) {
@@ -155,5 +174,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (radio) { loadInfoContent(currentQuestionNode.key, radio.value); }
         }
     });
+
+    function nextButtonClickHandler() {
+        const selectedOption = optionsContainerEl.querySelector(`input[name="${currentQuestionNode.key}"]:checked`);
+        if (!selectedOption) {
+            alert("Lütfen bir seçenek belirleyin.");
+            return;
+        }
+        userAnswers[currentQuestionNode.key] = selectedOption.value;
+        const nextQuestionId = currentQuestionNode.next(selectedOption.value);
+        showQuestionById(nextQuestionId);
+    }
+    
     nextBtn.addEventListener('click', nextButtonClickHandler);
 });
