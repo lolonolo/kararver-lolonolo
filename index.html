@@ -4,58 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kariyer Rehberi & Meslek Seçim Sihirbazı - Lolonolo</title>
-    <link rel="icon" type="image/png" href="https://lolonolo.com/wp-content/uploads/2025/04/lolonolo-favicon.png">
-    <link rel="apple-touch-icon" href="https://lolonolo.com/wp-content/uploads/2025/04/lolonolo-favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <header class="page-header">
-        <button class="hamburger-btn" id="hamburger-btn">
-            <span></span><span></span><span></span>
-        </button>
-    </header>
-
-    <div class="main-layout">
-        <aside class="sidebar-nav" id="side-menu">
-            <h3>Lolonolo Kaynakları</h3>
-            <ul>
-                <li><a href="https://lolonolo.com" target="_blank">Tüm Çıkmış Sınav Soruları</a></li>
-                <li><a href="https://www.shopier.com/lolonolo" target="_blank">Premium Üyelik</a></li>
-                <li><a href="https://openvideo.lolonolo.com/" target="_blank">Youtube Soru Videoları</a></li>
-                <li><a href="https://www.instagram.com/lolonolo_com" target="_blank">Destek (Instagram)</a></li>
-                <li><a href="mailto:lolonolo@lolonolo.com">İletişim (E-posta)</a></li>
-            </ul>
-        </aside>
-
-        <main class="calculator-wrapper">
-            <div class="wizard-card">
-                <div id="profile-selection-screen" class="wizard-body">
-                     <h3 class="screen-title">Sana en iyi nasıl yardımcı olabiliriz?</h3>
-                    <p class="screen-subtitle">Lütfen mevcut durumunu seçerek başla.</p>
-                    <div class="profile-options-container">
-                        <label class="profile-option-label"><input type="radio" name="user_profile" value="lise" checked><div class="profile-option-content"><h4>Lise Öğrencisiyim</h4><p>YKS'ye hazırlanıyor, bölüm ve meslek araştırıyorum.</p></div></label>
-                        <label class="profile-option-label"><input type="radio" name="user_profile" value="universite"><div class="profile-option-content"><h4>Üniversite Öğrencisiyim</h4><p>Bölümümden emin değilim, kariyerimi planlıyorum.</p></div></label>
-                        <label class="profile-option-label"><input type="radio" name="user_profile" value="mezun"><div class="profile-option-content"><h4>Mezunum / Çalışıyorum</h4><p>Kariyerimi değiştirmek veya kendimi geliştirmek istiyorum.</p></div></label>
-                    </div>
-                    <button id="start-quiz-btn" class="primary-btn">Teste Başla →</button>
+    <main class="wizard-wrapper">
+        <div class="wizard-card">
+            <div id="profile-selection-screen" class="wizard-body">
+                <h3 class="screen-title">Sana en iyi nasıl yardımcı olabiliriz?</h3>
+                <p class="screen-subtitle">Lütfen mevcut durumunu seçerek başla.</p>
+                <div class="profile-options-container">
+                    <label class="profile-option-label"><input type="radio" name="user_profile" value="lise" checked><div class="profile-option-content"><h4>Lise Öğrencisiyim</h4><p>YKS'ye hazırlanıyor, bölüm ve meslek araştırıyorum.</p></div></label>
+                    <label class="profile-option-label"><input type="radio" name="user_profile" value="universite"><div class="profile-option-content"><h4>Üniversite Öğrencisiyim</h4><p>Bölümümden emin değilim, kariyerimi planlıyorum.</p></div></label>
+                    <label class="profile-option-label"><input type="radio" name="user_profile" value="mezun"><div class="profile-option-content"><h4>Mezunum / Çalışıyorum</h4><p>Kariyerimi değiştirmek veya kendimi geliştirmek istiyorum.</p></div></label>
                 </div>
-                <div id="quiz-screen" style="display: none;">
-                    <div class="wizard-header"><h2>Akıllı Meslek Seçim Sihirbazı</h2></div>
-                    <div class="progress-bar"><div class="progress-bar-inner" id="progress-bar"></div></div>
-                    <div class="wizard-body">
-                        <div id="question-container"><h3 id="question-text"></h3><div class="options-container" id="options-container"></div></div>
-                        <div id="result-container" style="display: none;"></div>
-                    </div>
-                    <div class="wizard-footer"><button id="next-btn" class="primary-btn">Sonraki Soru →</button></div>
-                </div>
+                <button id="start-quiz-btn" class="primary-btn">Teste Başla →</button>
             </div>
-        </main>
-    </div>
-    
+            <div id="quiz-screen" style="display: none;">
+                <div class="wizard-header"><h2>Akıllı Meslek Seçim Sihirbazı</h2></div>
+                <div class="progress-bar"><div class="progress-bar-inner" id="progress-bar"></div></div>
+                <div class="wizard-body">
+                    <div id="question-container">
+                        <h3 id="question-text"></h3>
+                        <div class="options-container" id="options-container"></div>
+                        <div class="info-box" id="info-box" style="display: none;"></div>
+                    </div>
+                    <div id="result-container" style="display: none;"></div>
+                </div>
+                <div class="wizard-footer"><button id="next-btn" class="primary-btn">Sonraki Soru →</button></div>
+            </div>
+        </div>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
