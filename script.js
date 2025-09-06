@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: 'start', 
                 question: "Nasıl bir üniversite hayatı hedefliyorsun?", 
                 key: "egitim-turu",
-                // EKSİK OLAN KISIM BURASIYDI, EKLENDİ:
+                info: "💡 Örgün eğitim sosyal bir kampüs hayatı sunarken; Açıköğretim daha fazla esneklik ve disiplin gerektirir.",
                 options: [ 
                     { text: "Kampüse gidip derslere katılmak (Örgün Eğitim)", value: "orgun" }, 
                     { text: "Kendi zamanımı yöneterek, evden okumak (Açıköğretim)", value: "acikogretim" } 
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: 'acikogretim_universiteleri', 
                 question: "Harika! Peki hangi Açıköğretim Fakültesi ile daha çok ilgileniyorsun?", 
                 key: "acikogretim-universiteleri",
+                info: "💡 Her üniversitenin kendine özgü bölümleri ve sistemleri olabilir.",
                 options: [ 
                     { text: "Anadolu Üniversitesi (AÖF)", value: "anadolu" }, 
                     { text: "İstanbul Üniversitesi (AUZEF)", value: "auzef" }, 
@@ -41,10 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { 
                 id: 'auzef_bolumleri', 
                 question: "AUZEF için hangi bölümü düşünüyorsun?", 
-                key: "auzef-bolumleri", 
+                key: "auzef",
                 info: "İlgilendiğin bölüm hakkında bilgi almak için üzerine tıkla.",
-                options: [ 
-                  
+                options: [
                     { text: "Acil Durum Ve Afet Yönetimi (ÖnLisans)", value: "acil-durum-ve-afet-yonetimi-app" },
                     { text: "Adalet", value: "adalet-on-lisans-app" },
                     { text: "Bankacılık Ve Sigortacılık", value: "bankacilik-ve-sigortacilik" },
@@ -106,6 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (label) {
             document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
             label.classList.add('selected');
+            const radio = label.querySelector('input[type="radio"]');
+            if (radio) {
+                loadInfoContent(currentQuestionNode.key, radio.value);
+            }
         }
     });
 
@@ -128,8 +132,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showQuestionById(id) {
         currentQuestionNode = quizData[userProfile].find(q => q.id === id);
-        if (!currentQuestionNode) {
-            alert("Bu dalın sonuna geldik!");
+        if (!currentQuestionNode || currentQuestionNode.next === null) {
+            // Sonuç veya bitiş ekranı mantığı
+            questionTextEl.textContent = "Bu dalı tamamladın!";
+            if(currentQuestionNode && currentQuestionNode.id === 'auzef_bolumleri') {
+                 optionsContainerEl.innerHTML = `<p>Seçtiğin bölümle ilgili detayları araştırabilirsin. Sihirbazın bu dalı tamamlandı.</p>`;
+            } else if (currentQuestionNode) {
+                 optionsContainerEl.innerHTML = `<p>${currentQuestionNode.question}</p>`;
+            }
+            
+            nextBtn.textContent = '‹ Başa Dön';
+            nextBtn.onclick = () => {
+                quizScreen.style.display = 'none';
+                profileScreen.style.display = 'block';
+                // Orijinal click olayını tekrar aktif etmek için
+                nextBtn.onclick = null; 
+                nextBtn.addEventListener('click', nextButtonClickHandler);
+            };
             return;
         }
 
@@ -137,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
         optionsContainerEl.innerHTML = '';
         infoBoxEl.style.display = 'none';
 
-        if (currentQuestionNode.options && currentQuestionNode.options.length > 0) {
+        if(currentQuestionNode.options && currentQuestionNode.options.length > 0) {
             currentQuestionNode.options.forEach(option => {
                 const label = document.createElement('label');
                 label.className = 'option-label';
@@ -154,6 +173,43 @@ document.addEventListener('DOMContentLoaded', () => {
         const questionIndex = quizData[userProfile].findIndex(q => q.id === id);
         const progress = ((questionIndex + 1) / (quizData[userProfile].length - 1)) * 100;
         progressBar.style.width = `${progress}%`;
-        nextBtn.textContent = currentQuestionNode.next(null) === null ? 'Bitir' : 'Sonraki Soru →';
+        nextBtn.textContent = 'Sonraki Soru →';
     }
+    
+    async function loadInfoContent(questionKey, optionValue) {
+        let filePath = '';
+        
+        if (questionKey === 'acikogretim-universiteleri') {
+            filePath = `content/acikogretim-universiteleri/${optionValue}/${optionValue}.html`;
+        } else if (questionKey === 'auzef-bolumleri' || questionKey === 'auzef') {
+            filePath = `content/acikogretim-universiteleri/auzef/${optionValue}.html`;
+        } else {
+            filePath = `content/${questionKey}/${optionValue}.html`;
+        }
+
+        try {
+            const response = await fetch(filePath);
+            if (!response.ok) { throw new Error(`Dosya bulunamadı: ${filePath}`); }
+            const content = await response.text();
+            infoBoxEl.innerHTML = content;
+            infoBoxEl.style.display = 'block';
+        } catch (error) {
+            console.error("Bilgi içeriği yüklenemedi:", error);
+            infoBoxEl.style.display = 'none';
+        }
+    }
+
+    function nextButtonClickHandler() {
+        const selectedOption = optionsContainerEl.querySelector(`input[name="${currentQuestionNode.key}"]:checked`);
+        if (!selectedOption) {
+            alert("Lütfen bir seçenek belirleyin.");
+            return;
+        }
+        userAnswers[currentQuestionNode.key] = selectedOption.value;
+        const nextQuestionId = currentQuestionNode.next(selectedOption.value);
+        showQuestionById(nextQuestionId);
+    }
+    
+    // Olay dinleyicisini bir kere ve doğru şekilde bağla
+    // Butonun işlevi değiştiği için bu artık en sonda değil, 'Başa Dön' işlevi sıfırlandığında çağrılacak.
 });
