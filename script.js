@@ -14,18 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let quizQuestions = [];
     let currentQuestionIndex = 0;
 
-    // Lise öğrencisi için yeni, bilgilendirici sorular
     const liseQuestions = [
         {
             question: "Nasıl bir üniversite hayatı hedefliyorsun?",
             key: "egitim_turu",
-            info: "💡 **Pro-Tip:** Örgün eğitim, sosyal bir kampüs hayatı sunarken; Açıköğretim, çalışan veya kendi zamanını yönetmek isteyenler için büyük esneklik sağlar. İkisi de YKS puanıyla öğrenci alır.",
+            info: "💡 **Pro-Tip:** Örgün eğitim, sosyal bir kampüs hayatı sunarken; Açıköğretim, çalışan veya kendi zamanını yönetmek isteyenler için büyük esneklik sağlar. İkisinin de YKS puanıyla öğrenci aldığını unutma!",
             options: [
                 { text: "Kampüse gidip derslere katılmak (Örgün Eğitim)", value: "orgun" },
                 { text: "Kendi zamanımı yöneterek, evden okumak (Açıköğretim)", value: "acikogretim" }
             ]
         },
-        // Bir sonraki adımda Holland Testi soruları buraya gelecek
+        // Diğer sorular buraya eklenecek
     ];
 
     // --- OLAY DİNLEYİCİLER ---
@@ -41,13 +40,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // SEÇENEKLERE TIKLANDIĞINDA ÇALIŞAN GÜNCELLENMİŞ MANTIK
+    optionsContainerEl.addEventListener('click', (e) => {
+        const label = e.target.closest('.option-label');
+        if (label) {
+            // Görsel olarak seçili yapma
+            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+
+            // Bilgi kutusunu dinamik olarak değiştirme
+            const radio = label.querySelector('input[type="radio"]');
+            const originalInfo = quizQuestions[currentQuestionIndex].info;
+
+            if (radio && radio.value === 'acikogretim') {
+                infoBoxEl.innerHTML = `💡 <strong>Harika Seçim!</strong> Açıköğretim, disiplinli öğrenciler için müthiş bir fırsattır. Unutma, bu yolda yalnız değilsin! <strong>lolonolo.com</strong>'da seni bekleyen yüz binlerce çıkmış soru, on binlerce deneme sınavı ve tüm ders materyalleri tamamen <strong>ücretsiz!</strong>`;
+            } else {
+                infoBoxEl.innerHTML = originalInfo;
+            }
+        }
+    });
+
     // --- ANA FONKSİYONLAR ---
     function initializeWizard() {
-        // Seçilen profile göre doğru soru setini yükle (şimdilik sadece 'lise' var)
         if (userProfile === 'lise') {
             quizQuestions = liseQuestions;
         } else {
-            // Diğer profiller için de benzer soru setleri oluşturulacak
             alert("Bu profil için anket yakında eklenecektir.");
             quizScreen.style.display = 'none';
             profileScreen.style.display = 'block';
@@ -61,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentQuestion = quizQuestions[currentQuestionIndex];
         questionTextEl.textContent = currentQuestion.question;
         
-        optionsContainerEl.innerHTML = ''; // Önceki seçenekleri temizle
+        optionsContainerEl.innerHTML = '';
         currentQuestion.options.forEach(option => {
             const label = document.createElement('label');
             label.className = 'option-label';
@@ -69,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
             optionsContainerEl.appendChild(label);
         });
 
-        // Bilgi kutusunu doldur ve göster
         if (currentQuestion.info) {
             infoBoxEl.innerHTML = currentQuestion.info;
             infoBoxEl.style.display = 'block';
@@ -77,14 +93,4 @@ document.addEventListener('DOMContentLoaded', () => {
             infoBoxEl.style.display = 'none';
         }
     }
-
-    // Seçeneklere tıklandığında görsel olarak seçili hale getirme
-    optionsContainerEl.addEventListener('click', (e) => {
-        const label = e.target.closest('.option-label');
-        if (label) {
-            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
-            label.classList.add('selected');
-        }
-    });
-
 });
