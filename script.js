@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const sideMenu = document.getElementById('side-menu');
+    // --- ELEMENTLER ---
     const profileScreen = document.getElementById('profile-selection-screen');
     const quizScreen = document.getElementById('quiz-screen');
     const startQuizBtn = document.getElementById('start-quiz-btn');
@@ -9,7 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const optionsContainerEl = document.getElementById('options-container');
     const nextBtn = document.getElementById('next-btn');
     const infoBoxEl = document.getElementById('info-box');
+    const progressBar = document.getElementById('progress-bar');
+    const questionContainer = document.getElementById('question-container');
+    const resultContainer = document.getElementById('result-container');
 
+    // --- DEĞİŞKENLER VE VERİTABANI ---
     let userProfile = 'lise';
     let quizQuestions = [];
     let currentQuestionIndex = 0;
@@ -17,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const liseQuestions = [
         {
             question: "Nasıl bir üniversite hayatı hedefliyorsun?",
-            key: "egitim-turu", // Alt çizgi, tire ile değiştirildi.
+            key: "egitim-turu",
             info: "💡 **Pro-Tip:** Örgün eğitim, sosyal bir kampüs hayatı sunarken; Açıköğretim, çalışan veya kendi zamanını yönetmek isteyenler için büyük esneklik sağlar. İkisinin de YKS puanıyla öğrenci aldığını unutma!",
             options: [
                 { text: "Kampüse gidip derslere katılmak (Örgün Eğitim)", value: "orgun" },
@@ -26,8 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     ];
 
-    hamburgerBtn.addEventListener('click', () => sideMenu.classList.toggle('is-open'));
-
+    // --- OLAY DİNLEYİCİLER ---
     startQuizBtn.addEventListener('click', () => {
         const selectedProfile = document.querySelector('input[name="user_profile"]:checked');
         if (selectedProfile) {
@@ -53,6 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    nextBtn.addEventListener('click', () => {
+        alert("Harika! Bir sonraki adımda soruları ilerleteceğiz.");
+    });
+
+
+    // --- ANA FONKSİYONLAR ---
     function initializeWizard() {
         if (userProfile === 'lise') {
             quizQuestions = liseQuestions;
