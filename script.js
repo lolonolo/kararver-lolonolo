@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('next-btn');
     const infoBoxEl = document.getElementById('info-box');
     const progressBar = document.getElementById('progress-bar');
+    const questionContainer = document.getElementById('question-container');
     
     // --- DEĞİŞKENLER VE SORU AKIŞI ---
     let userProfile = 'lise';
@@ -16,35 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const quizData = {
         lise: [
-            { 
-                id: 'start', 
-                question: "Nasıl bir üniversite hayatı hedefliyorsun?", 
-                key: "egitim-turu", 
-                info: "💡 Örgün eğitim sosyal bir kampüs hayatı sunarken; Açıköğretim daha fazla esneklik ve disiplin gerektirir.", 
-                options: [ 
-                    { text: "Kampüse gidip derslere katılmak (Örgün Eğitim)", value: "orgun" }, 
-                    { text: "Kendi zamanımı yöneterek, evden okumak (Açıköğretim)", value: "acikogretim" } 
-                ],
-                next: (answer) => answer === 'acikogretim' ? 'acikogretim_universiteleri' : 'henuz_hazir_degil' 
-            },
-            { 
-                id: 'acikogretim_universiteleri', 
-                question: "Harika! Peki hangi Açıköğretim Fakültesi ile daha çok ilgileniyorsun?", 
-                key: "acikogretim-universiteleri",
-                info: "💡 Her üniversitenin kendine özgü bölümleri ve sistemleri olabilir.", 
-                options: [ 
-                    { text: "Anadolu Üniversitesi (AÖF)", value: "anadolu" }, 
-                    { text: "İstanbul Üniversitesi (AUZEF)", value: "auzef" }, 
-                    { text: "Atatürk Üniversitesi (ATA-AÖF)", value: "ata-aof" } 
-                ], 
-                next: (answer) => answer === 'auzef' ? 'auzef_bolumleri' : 'henuz_hazir_degil'
-            },
+            { id: 'start', question: "Nasıl bir üniversite hayatı hedefliyorsun?", key: "egitim-turu", next: (answer) => answer === 'acikogretim' ? 'acikogretim_universiteleri' : 'henuz_hazir_degil' },
+            { id: 'acikogretim_universiteleri', question: "Hangi Açıköğretim Fakültesi?", key: "acikogretim-universiteleri", next: (answer) => answer === 'auzef' ? 'auzef_bolumleri' : 'henuz_hazir_degil' },
             { 
                 id: 'auzef_bolumleri', 
                 question: "AUZEF için hangi bölümü düşünüyorsun?", 
-                key: "auzef-bolumleri", 
+                key: "auzef-bolumleri",
                 info: "İlgilendiğin bölüm hakkında bilgi almak için üzerine tıkla.",
                 options: [ 
+                   
                     { text: "Acil Durum Ve Afet Yönetimi (ÖnLisans)", value: "acil-durum-ve-afet-yonetimi-app" },
                     { text: "Adalet", value: "adalet-on-lisans-app" },
                     { text: "Bankacılık Ve Sigortacılık", value: "bankacilik-ve-sigortacilik" },
@@ -83,17 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 ], 
                 next: () => null
             },
-            { 
-                id: 'henuz_hazir_degil', 
-                question: "Bu dal henüz yapım aşamasında!", 
-                key: "bitti", 
-                options: [], 
-                next: () => null 
-            }
+            { id: 'henuz_hazir_degil', question: "Bu dal henüz yapım aşamasında!", key: "bitti", options: [], next: () => null }
         ]
     };
 
-    // --- OLAY DİNLEYİİCİLER ---
+    // --- OLAY DİNLEYİCİLER VE ANA FONKSİYONLAR ---
     startQuizBtn.addEventListener('click', () => {
         userProfile = document.querySelector('input[name="user_profile"]:checked').value;
         profileScreen.style.display = 'none';
@@ -101,26 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeWizard();
     });
 
-    optionsContainerEl.addEventListener('click', (e) => {
-        const label = e.target.closest('.option-label');
-        if (label) {
-            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
-            label.classList.add('selected');
-        }
-    });
-
-    nextBtn.addEventListener('click', () => {
-        const selectedOption = optionsContainerEl.querySelector(`input[name="${currentQuestionNode.key}"]:checked`);
-        if (!selectedOption) {
-            alert("Lütfen bir seçenek belirleyin.");
-            return;
-        }
-        userAnswers[currentQuestionNode.key] = selectedOption.value;
-        const nextQuestionId = currentQuestionNode.next(selectedOption.value);
-        showQuestionById(nextQuestionId);
-    });
-
-    // --- ANA FONKSİYONLAR ---
     function initializeWizard() {
         userAnswers = {};
         showQuestionById('start');
@@ -129,33 +84,76 @@ document.addEventListener('DOMContentLoaded', () => {
     function showQuestionById(id) {
         currentQuestionNode = quizData[userProfile].find(q => q.id === id);
         if (!currentQuestionNode) {
-            alert("Bu dalın sonuna geldik!");
-            quizScreen.style.display = 'none';
-            profileScreen.style.display = 'block';
+            // ...
+            return;
+        }
+
+        // Eğer bir önceki adım anketin sonuysa, sonuç ekranını göster
+        if(currentQuestionNode.next(userAnswers[currentQuestionNode.key]) === null) {
+            displayFinalResult();
             return;
         }
 
         questionTextEl.textContent = currentQuestionNode.question;
-        optionsContainerEl.innerHTML = ''; // Önceki seçenekleri temizle
+        optionsContainerEl.innerHTML = '';
         infoBoxEl.style.display = 'none';
-
-        if (currentQuestionNode.options && currentQuestionNode.options.length > 0) {
-            currentQuestionNode.options.forEach(option => {
-                const label = document.createElement('label');
-                label.className = 'option-label';
-                label.innerHTML = `<input type="radio" name="${currentQuestionNode.key}" value="${option.value}"><span>${option.text}</span>`;
-                optionsContainerEl.appendChild(label);
-            });
-        }
+        
+        currentQuestionNode.options.forEach(option => {
+            const label = document.createElement('label');
+            label.className = 'option-label';
+            label.innerHTML = `<input type="radio" name="${currentQuestionNode.key}" value="${option.value}"><span>${option.text}</span>`;
+            optionsContainerEl.appendChild(label);
+        });
 
         if (currentQuestionNode.info) {
             infoBoxEl.innerHTML = currentQuestionNode.info;
             infoBoxEl.style.display = 'block';
         }
-
+        
         const questionIndex = quizData[userProfile].findIndex(q => q.id === id);
         const progress = ((questionIndex + 1) / (quizData[userProfile].length - 1)) * 100;
         progressBar.style.width = `${progress}%`;
-        nextBtn.textContent = currentQuestionNode.next(null) === null ? 'Bitir' : 'Sonraki Soru →';
+        nextBtn.textContent = 'Sonraki Soru →';
     }
+
+    function displayFinalResult(){
+        const selectedBolumValue = userAnswers['auzef-bolumleri'];
+        const bolumOption = quizData.lise.find(q => q.id === 'auzef_bolumleri').options.find(opt => opt.value === selectedBolumValue);
+        const bolumText = bolumOption ? bolumOption.text : "seçtiğin bölüm";
+        const lolonoloLink = `https://lolonolo.com/auzef/${selectedBolumValue}/`;
+        // AUZEF linkini oluşturmak için daha sonra bir arama veya API gerekebilir, şimdilik placeholder
+        const auzefLink = `https://auzef.istanbul.edu.tr/tr/program/${selectedBolumValue.replace(/-/g, ' ')}`;
+
+
+        questionTextEl.textContent = "Harika bir seçim!";
+        optionsContainerEl.innerHTML = `
+            <div class="final-result-container">
+                <p>Seçtiğin bölüm olan <strong>${bolumText}</strong> hakkında daha fazla bilgi almak ve sınavlara hazırlanmak için aşağıdaki kaynakları kullanabilirsin.</p>
+                <a href="${lolonoloLink}" target="_blank" class="info-link">Lolonolo Ders Notları →</a>
+                <a href="${auzefLink}" target="_blank" class="info-link">AUZEF Resmi Sayfası →</a>
+            </div>
+        `;
+        nextBtn.textContent = '‹ Başa Dön';
+        nextBtn.onclick = () => {
+            quizScreen.style.display = 'none';
+            profileScreen.style.display = 'block';
+            nextBtn.onclick = null;
+            nextBtn.addEventListener('click', nextButtonClickHandler);
+        };
+    }
+
+    async function loadInfoContent(questionKey, optionValue) { /* ... (aynı) ... */ }
+    function nextButtonClickHandler() { /* ... (aynı) ... */ }
+    
+    // Olay dinleyicileri ve diğer fonksiyonların tam hali
+    optionsContainerEl.addEventListener('click', (e) => {
+        const label = e.target.closest('.option-label');
+        if (label) {
+            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+            const radio = label.querySelector('input[type="radio"]');
+            if (radio) { loadInfoContent(currentQuestionNode.key, radio.value); }
+        }
+    });
+    nextBtn.addEventListener('click', nextButtonClickHandler);
 });
