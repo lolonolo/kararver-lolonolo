@@ -1,50 +1,11 @@
 [
-    {
-      "name": "Yazılım Geliştirici",
-      "puan_turu": "sayisal", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik",
-      "sevmedigin_yon": "pratik", "gelecek_hedefi": "sirket",
-      "tatminsizlik": "gelisim_yok", "yeni_kariyer_hedefi": "yaraticilik"
-    },
-    {
-      "name": "Akademisyen / Araştırmacı",
-      "puan_turu": "sayisal", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik",
-      "sevmedigin_yon": "teorik", "gelecek_hedefi": "akademi",
-      "tatminsizlik": "anlamsiz_is", "yeni_kariyer_hedefi": "fayda_saglama"
-    },
-    {
-      "name": "Avukat",
-      "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
-      "sevmedigin_yon": "pratik", "gelecek_hedefi": "serbest",
-      "tatminsizlik": "kazanc", "yeni_kariyer_hedefi": "kazanc"
-    },
-    {
-      "name": "Grafik Tasarımcı",
-      "puan_turu": "esit_agirlik", "calisma_ortami": "teknik", "yaklasim_tarzi": "yaratici",
-      "sevmedigin_yon": "pratik", "gelecek_hedefi": "serbest",
-      "tatminsizlik": "stres", "yeni_kariyer_hedefi": "yaraticilik"
-    },
-    {
-      "name": "Psikolog",
-      "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
-      "sevmedigin_yon": "ilgisiz", "gelecek_hedefi": "insan_odakli",
-      "tatminsizlik": "anlamsiz_is", "yeni_kariyer_hedefi": "fayda_saglama"
-    },
-    {
-      "name": "Kamu Yöneticisi (Memur)",
-      "puan_turu": "esit_agirlik", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik",
-      "sevmedigin_yon": "is_garantisi", "gelecek_hedefi": "kamu",
-      "tatminsizlik": "stres", "yeni_kariyer_hedefi": "guvence"
-    },
-    {
-      "name": "Reklamcı / Pazarlama Uzmanı",
-      "puan_turu": "sozel", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "yaratici",
-      "sevmedigin_yon": "pratik", "gelecek_hedefi": "sirket",
-      "tatminsizlik": "stres", "yeni_kariyer_hedefi": "yaraticilik"
-    },
-    {
-        "name": "İnsan Kaynakları Uzmanı",
-        "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
-        "sevmedigin_yon": "ilgisiz", "gelecek_hedefi": "sirket",
-        "tatminsizlik": "stres", "yeni_kariyer_hedefi": "fayda_saglama"
-    }
+    { "name": "Yazılım Geliştirici", "puan_turu": "sayisal", "holland_codes": ["I", "R"] },
+    { "name": "Doktor (Tıp)", "puan_turu": "sayisal", "holland_codes": ["I", "S"] },
+    { "name": "İnşaat Mühendisi", "puan_turu": "sayisal", "holland_codes": ["R", "I"] },
+    { "name": "Avukat", "puan_turu": "esit_agirlik", "holland_codes": ["E", "S"] },
+    { "name": "Grafik Tasarımcı", "puan_turu": "esit_agirlik", "holland_codes": ["A", "R"] },
+    { "name": "Psikolog", "puan_turu": "esit_agirlik", "holland_codes": ["S", "I"] },
+    { "name": "Reklamcı", "puan_turu": "sozel", "holland_codes": ["A", "E"] },
+    { "name": "Öğretmen", "puan_turu": "sozel", "holland_codes": ["S", "A"] },
+    { "name": "Finans Uzmanı", "puan_turu": "esit_agirlik", "holland_codes": ["C", "E"] }
 ]
