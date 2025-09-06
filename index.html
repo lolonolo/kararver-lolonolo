@@ -4,15 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kariyer Rehberi & Meslek Seçim Sihirbazı - Lolonolo</title>
-    
-    <link rel="icon" type="image/png" href="https://lolonolo.com/wp-content/uploads/2025/04/lolonolo-favicon.png">
-    <link rel="apple-touch-icon" href="https://lolonolo.com/wp-content/uploads/2025/04/lolonolo-favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- TÜM CSS KODLARI BURADA --- */
         :root {
             --primary-color: #6a1b9a; --secondary-color: #fce4ec; --card-bg: #ffffff;
             --body-bg: #f3e5f5; --text-color: #333; --light-text: #6c757d;
@@ -53,45 +49,23 @@
         .result-info { font-size: 14px; color: var(--light-text); margin-top: 20px; }
         button.secondary-btn { background-color: #e9ecef; color: #333; border: 2px solid #dee2e6; margin-top: 20px; font-weight: 600; }
         button.secondary-btn:hover { background-color: #dee2e6; border-color: #adb5bd; }
+        .promo-box { margin-top: 15px; padding: 10px; border: 1px dashed var(--primary-color); border-radius: 8px; background-color: var(--secondary-color); }
+        .promo-box a { color: var(--primary-color); font-weight: bold; }
     </style>
 </head>
 <body>
-
     <main class="wizard-wrapper">
         <div class="wizard-card">
-            
             <div id="profile-selection-screen" class="wizard-body">
                 <h3 class="screen-title">Sana en iyi nasıl yardımcı olabiliriz?</h3>
                 <p class="screen-subtitle">Lütfen mevcut durumunu seçerek başla.</p>
-                <div class="profile-options-container" id="profile-options-container">
-                    <label class="profile-option-label">
-                        <input type="radio" name="user_profile" value="lise" checked>
-                        <div class="profile-option-content">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
-                            <h4>Lise Öğrencisiyim</h4>
-                            <p>YKS'ye hazırlanıyor, bölüm ve meslek araştırıyorum.</p>
-                        </div>
-                    </label>
-                    <label class="profile-option-label">
-                        <input type="radio" name="user_profile" value="universite">
-                        <div class="profile-option-content">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 18V6h16v12H4z"/><path d="M6 14h1v-3H6v3zm2-3h1v4H8v-4zm2 0h1v3h-1v-3zm2 0h1v4h-1v-4zm2 0h1v3h-1v-3zM6 10h1v1H6v-1zm4 0h1v1h-1v-1zm4 0h1v1h-1v-1z"/></svg>
-                            <h4>Üniversite Öğrencisiyim</h4>
-                            <p>Bölümümden emin değilim, kariyerimi planlıyorum.</p>
-                        </div>
-                    </label>
-                    <label class="profile-option-label">
-                        <input type="radio" name="user_profile" value="mezun">
-                        <div class="profile-option-content">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6-2h4v2h-4V4z"/></svg>
-                            <h4>Mezunum / Çalışıyorum</h4>
-                            <p>Kariyerimi değiştirmek veya kendimi geliştirmek istiyorum.</p>
-                        </div>
-                    </label>
+                <div class="profile-options-container">
+                    <label class="profile-option-label"><input type="radio" name="user_profile" value="lise" checked><div class="profile-option-content"><h4>Lise Öğrencisiyim</h4><p>YKS'ye hazırlanıyor, bölüm ve meslek araştırıyorum.</p></div></label>
+                    <label class="profile-option-label"><input type="radio" name="user_profile" value="universite"><div class="profile-option-content"><h4>Üniversite Öğrencisiyim</h4><p>Bölümümden emin değilim, kariyerimi planlıyorum.</p></div></label>
+                    <label class="profile-option-label"><input type="radio" name="user_profile" value="mezun"><div class="profile-option-content"><h4>Mezunum / Çalışıyorum</h4><p>Kariyerimi değiştirmek veya kendimi geliştirmek istiyorum.</p></div></label>
                 </div>
                 <button id="start-quiz-btn" class="primary-btn">Teste Başla →</button>
             </div>
-            
             <div id="quiz-screen" style="display: none;">
                 <div class="wizard-header"><h2>Akıllı Meslek Seçim Sihirbazı</h2></div>
                 <div class="progress-bar"><div class="progress-bar-inner" id="progress-bar"></div></div>
@@ -107,88 +81,67 @@
                     <button id="next-btn" class="primary-btn">Sonraki Soru →</button>
                 </div>
             </div>
-
         </div>
     </main>
     
     <script>
-        // --- TÜM JAVASCRIPT KODLARI BURADA ---
         document.addEventListener('DOMContentLoaded', () => {
             const profileScreen = document.getElementById('profile-selection-screen');
             const quizScreen = document.getElementById('quiz-screen');
             const startQuizBtn = document.getElementById('start-quiz-btn');
-            const profileOptionsContainer = document.getElementById('profile-options-container');
-            let userProfile = 'lise';
-
-            if(profileOptionsContainer) {
-                profileOptionsContainer.addEventListener('click', (e) => {
-                    const label = e.target.closest('.profile-option-label');
-                    if (label) {
-                        document.querySelectorAll('.profile-option-label').forEach(l => l.classList.remove('selected'));
-                        label.classList.add('selected');
-                    }
-                });
-            }
-
-            if(startQuizBtn) {
-                startQuizBtn.addEventListener('click', () => {
-                    const selectedProfile = document.querySelector('input[name="user_profile"]:checked');
-                    if (selectedProfile) {
-                        userProfile = selectedProfile.value;
-                        profileScreen.style.display = 'none';
-                        quizScreen.style.display = 'block';
-                        initializeWizard();
-                    } else {
-                        alert("Lütfen başlamak için bir durum seçin.");
-                    }
-                });
-            }
-
             const questionTextEl = document.getElementById('question-text');
             const optionsContainerEl = document.getElementById('options-container');
             const nextBtn = document.getElementById('next-btn');
-            const progressBar = document.getElementById('progress-bar');
-            const questionContainer = document.getElementById('question-container');
-            const resultContainer = document.getElementById('result-container');
             const infoBoxEl = document.getElementById('info-box');
-            
-            const questionsByProfile = {
-                lise: [
-                    { question: "En başarılı olduğun ders grubu hangisi?", key: "puan_turu", options: [ { text: "Matematik, Fizik (Sayısal)", value: "sayisal" }, { text: "Edebiyat, Tarih (Sözel)", value: "sozel" }, { text: "Matematik, Edebiyat (Eşit Ağırlık)", value: "esit_agirlik" }, { text: "İngilizce, Almanca (Dil)", value: "dil" } ] },
-                    { question: "Nasıl bir çalışma ortamını tercih edersin?", key: "calisma_ortami", options: [ { text: "İnsanlarla sürekli iletişim halinde, dinamik bir ortam.", value: "insan_odakli" }, { text: "Kendi başıma odaklanabileceğim, sakin bir ofis.", value: "ofis" }, { text: "Atölye, laboratuvar veya stüdyo gibi teknik bir ortam.", value: "teknik" }, { text: "Masa başında değil, dışarıda, sahada olacağım bir ortam.", value: "saha" } ] },
-                    { question: "Bir sorunu çözerken hangi yönün daha ağır basar?", key: "yaklasim_tarzi", options: [ { text: "Analitik düşünür, verileri ve mantığı kullanırım.", value: "analitik" }, { text: "Yaratıcılığımı ve hayal gücümü kullanırım.", value: "yaratici" }, { text: "Empati kurar, insan odaklı çözümler üretirim.", value: "empati" } ] }
-                ],
-                universite: [
-                    { question: "Mevcut bölümünün en çok hangi yönünü sevmiyorsun?", key: "sevmedigin_yon", options: [ { text: "Dersler çok teorik, pratiğe yönelik değil.", value: "teorik" }, { text: "İş imkanlarının kısıtlı olduğunu düşünüyorum.", value: "is_garantisi" }, { text: "İlgi alanlarıma tam olarak hitap etmiyor.", value: "ilgisiz" }, { text: "Bölümümden memnunum, sadece kariyerimi planlamak istiyorum.", value: "memnunum" } ] },
-                    { question: "Gelecekte kendini nerede görmek istersin?", key: "gelecek_hedefi", options: [ { text: "Akademide kalıp araştırmacı olmak.", value: "akademi" }, { text: "Büyük ve kurumsal bir şirkette çalışmak.", value: "sirket" }, { text: "Kendi işimi kurmak / Freelance çalışmak.", value: "serbest" }, { text: "Kamu kurumlarında (devlet) çalışmak.", value: "kamu" } ] }
-                ],
-                mezun: []
-            };
-            
-            let professions = [ { "name": "Yazılım Geliştirici", "puan_turu": "sayisal", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik", "sevmedigin_yon": "pratik", "gelecek_hedefi": "sirket" }, { "name": "Akademisyen / Araştırmacı", "puan_turu": "sayisal", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik", "sevmedigin_yon": "teorik", "gelecek_hedefi": "akademi" }, { "name": "Avukat", "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati", "sevmedigin_yon": "pratik", "gelecek_hedefi": "serbest" }, { "name": "Grafik Tasarımcı", "puan_turu": "esit_agirlik", "calisma_ortami": "teknik", "yaklasim_tarzi": "yaratici", "sevmedigin_yon": "pratik", "gelecek_hedefi": "serbest" }, { "name": "Psikolog", "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati", "sevmedigin_yon": "ilgisiz", "gelecek_hedefi": "insan_odakli" }, { "name": "Kamu Yöneticisi", "puan_turu": "esit_agirlik", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik", "sevmedigin_yon": "is_garantisi", "gelecek_hedefi": "kamu" } ];
+
+            let userProfile = 'lise';
             let quizQuestions = [];
             let currentQuestionIndex = 0;
-            let userAnswers = {};
+
+            const infoContent = {
+                orgun: '<h4>Örgün Eğitim (Kampüs Hayatı)</h4><p>Örgün eğitim, üniversiteye fiziksel olarak giderek, derslere sınıflarda katıldığınız geleneksel modeldir. Sosyal bir kampüs ortamı, kulüp etkinlikleri ve hocalarla yüz yüze etkileşim sunar.</p>',
+                acikogretim: '<h4>Açıköğretim (Esnek Eğitim)</h4><p>Açıköğretim, dersleri evden takip ettiğiniz, daha esnek bir modeldir. Kendi kendine çalışma disiplini gerektirir.</p><div class="promo-box"><strong>Unutma, bu yolda yalnız değilsin!</strong> <a href="https://lolonolo.com" target="_blank">lolonolo.com</a>\'da açıköğretim için on binlerce soru ve ders notu tamamen <strong>ücretsiz!</strong></div>'
+            };
+
+            const liseQuestions = [{
+                question: "Nasıl bir üniversite hayatı hedefliyorsun?",
+                key: "egitim_turu",
+                info: "💡 **Pro-Tip:** Örgün eğitim sosyal bir kampüs hayatı sunarken; Açıköğretim daha fazla esneklik ve disiplin gerektirir.",
+                options: [
+                    { text: "Kampüse gidip derslere katılmak (Örgün Eğitim)", value: "orgun" },
+                    { text: "Kendi zamanımı yöneterek, evden okumak (Açıköğretim)", value: "acikogretim" }
+                ]
+            }];
+
+            startQuizBtn.addEventListener('click', () => {
+                const selectedProfile = document.querySelector('input[name="user_profile"]:checked');
+                if (selectedProfile) {
+                    userProfile = selectedProfile.value;
+                    profileScreen.style.display = 'none';
+                    quizScreen.style.display = 'block';
+                    initializeWizard();
+                } else {
+                    alert("Lütfen başlamak için bir durum seçin.");
+                }
+            });
 
             function initializeWizard() {
-                quizQuestions = questionsByProfile[userProfile] || questionsByProfile['lise'];
-                if (quizQuestions.length === 0) {
-                    alert("Bu profil için henüz anket hazırlanmamıştır.");
+                if (userProfile === 'lise') {
+                    quizQuestions = liseQuestions;
+                } else {
+                    alert("Bu profil için anket yakında eklenecektir.");
                     quizScreen.style.display = 'none';
                     profileScreen.style.display = 'block';
                     return;
                 }
                 currentQuestionIndex = 0;
-                userAnswers = {};
                 showQuestion();
             }
 
             function showQuestion() {
-                resultContainer.style.display = 'none';
-                questionContainer.style.display = 'block';
-                nextBtn.style.display = 'block';
                 const currentQuestion = quizQuestions[currentQuestionIndex];
-                questionTextEl.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+                questionTextEl.textContent = currentQuestion.question;
+                
                 optionsContainerEl.innerHTML = '';
                 currentQuestion.options.forEach(option => {
                     const label = document.createElement('label');
@@ -196,54 +149,36 @@
                     label.innerHTML = `<input type="radio" name="q${currentQuestionIndex}" value="${option.value}"><span>${option.text}</span>`;
                     optionsContainerEl.appendChild(label);
                 });
-                const progress = ((currentQuestionIndex) / quizQuestions.length) * 100;
-                progressBar.style.width = `${progress}%`;
-                if (currentQuestionIndex === quizQuestions.length - 1) {
-                    nextBtn.textContent = 'Sonuçları Gör ✨';
+
+                if (currentQuestion.info) {
+                    infoBoxEl.innerHTML = currentQuestion.info;
+                    infoBoxEl.style.display = 'block';
                 } else {
-                    nextBtn.textContent = 'Sonraki Soru →';
+                    infoBoxEl.style.display = 'none';
                 }
             }
-
-            function calculateResults() {
-                professions.forEach(profession => {
-                    let score = 0;
-                    for (const key in userAnswers) { if (profession[key] === userAnswers[key]) { score++; } }
-                    profession.score = score;
-                });
-                const sortedProfessions = professions.sort((a, b) => b.score - a.score);
-                displayResults(sortedProfessions.slice(0, 3));
-            }
             
-            function displayResults(results) {
-                questionContainer.style.display = 'none';
-                nextBtn.style.display = 'none';
-                resultContainer.innerHTML = `<h3>Verdiğin cevaplara göre sana en uygun 3 meslek:</h3><ul class="result-list">${results.map(r => `<li>${r.name}</li>`).join('')}</ul><p class="result-info">Bu öneriler, bir başlangıç noktasıdır.</p><button id="restart-btn" class="secondary-btn">‹ Başa Dön</button>`;
-                resultContainer.style.display = 'block';
-                progressBar.style.width = `100%`;
-                document.getElementById('restart-btn').addEventListener('click', () => {
-                    quizScreen.style.display = 'none';
-                    profileScreen.style.display = 'block';
-                });
-            }
+            optionsContainerEl.addEventListener('click', (e) => {
+                const label = e.target.closest('.option-label');
+                if (label) {
+                    document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+                    label.classList.add('selected');
+                    const radio = label.querySelector('input[type="radio"]');
+                    if (radio && infoContent[radio.value]) {
+                        infoBoxEl.innerHTML = infoContent[radio.value];
+                        infoBoxEl.style.display = 'block';
+                    }
+                }
+            });
 
-            if(nextBtn) {
-                nextBtn.addEventListener('click', () => {
-                    const selectedOption = optionsContainerEl.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
-                    if (!selectedOption) {
-                        alert("Lütfen bir seçenek belirleyin.");
-                        return;
-                    }
-                    const currentKey = quizQuestions[currentQuestionIndex].key;
-                    userAnswers[currentKey] = selectedOption.value;
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < quizQuestions.length) {
-                        showQuestion();
-                    } else {
-                        calculateResults();
-                    }
-                });
-            }
+            nextBtn.addEventListener('click', () => {
+                const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+                if (!selectedOption) {
+                    alert("Lütfen bir seçenek belirleyin.");
+                    return;
+                }
+                alert("Harika! Bir sonraki adımda Holland Testi sorularını ekleyeceğiz.");
+            });
         });
     </script>
 </body>
