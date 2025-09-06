@@ -7,39 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root { --primary-color: #6a1b9a; --secondary-color: #fce4ec; --card-bg: #ffffff; --body-bg: #f3e5f5; --text-color: #333; --light-text: #6c757d; --border-color: #e0e0e0; --highlight-bg: #f8f9fa; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--body-bg); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .wizard-wrapper { width: 100%; max-width: 600px; }
-        .wizard-card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1); overflow: hidden; }
-        .wizard-header { text-align: center; padding: 16px; background-color: var(--primary-color); color: white; }
-        .wizard-header h2 { font-size: 22px; }
-        .progress-bar { background-color: #e0e0e0; padding: 2px; }
-        .progress-bar-inner { height: 6px; background-color: #ffab40; border-radius: 3px; transition: width 0.4s ease-in-out; }
-        .wizard-body { padding: 32px; }
-        #question-text { font-size: 20px; font-weight: 600; margin-bottom: 24px; text-align: center; }
-        .options-container { display: grid; gap: 16px; }
-        .option-label { display: block; background-color: var(--highlight-bg, #f8f9fa); border: 2px solid var(--border-color); border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s; }
-        .option-label:hover { border-color: var(--primary-color); }
-        .option-label input[type="radio"]:checked + span, .option-label.selected span { color: var(--primary-color); font-weight: 600; }
-        .option-label.selected { border-color: var(--primary-color); background-color: var(--secondary-color); }
-        .option-label input[type="radio"] { display: none; }
-        .wizard-footer { padding: 24px; border-top: 1px solid var(--border-color); }
-        button.primary-btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; background-color: var(--primary-color); color: white; transition: background-color 0.2s; }
-        button.primary-btn:hover { background-color: #4a148c; }
-        .screen-title { text-align: center; font-size: 24px; font-weight: 700; color: var(--primary-color); margin-bottom: 8px; }
-        .screen-subtitle { text-align: center; font-size: 16px; color: var(--light-text); margin-bottom: 32px; }
-        .profile-options-container { display: grid; gap: 16px; margin-bottom: 32px; }
-        .profile-option-label { display: block; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
-        .profile-option-label:hover { border-color: var(--primary-color); transform: translateY(-2px); }
-        .profile-option-label input[type="radio"]:checked + .profile-option-content { border-color: var(--primary-color); background-color: var(--secondary-color); box-shadow: 0 4px 15px rgba(106, 27, 154, 0.1); }
-        .profile-option-content { padding: 20px; text-align: center; border: 2px solid transparent; border-radius: 10px; }
-        .profile-option-content h4 { font-size: 18px; margin-bottom: 4px; color: #333; }
-        .profile-option-content p { font-size: 14px; color: var(--light-text); }
-        .info-box { margin-top: 24px; padding: 16px; background-color: #f1f8e9; border-left: 4px solid #8bc34a; color: #556b2f; font-size: 14px; line-height: 1.6; border-radius: 4px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main class="wizard-wrapper">
@@ -63,89 +31,12 @@
                         <div class="options-container" id="options-container"></div>
                         <div class="info-box" id="info-box" style="display: none;"></div>
                     </div>
+                    <div id="result-container" style="display: none;"></div>
                 </div>
                 <div class="wizard-footer"><button id="next-btn" class="primary-btn">Sonraki Soru →</button></div>
             </div>
         </div>
     </main>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const profileScreen = document.getElementById('profile-selection-screen');
-            const quizScreen = document.getElementById('quiz-screen');
-            const startQuizBtn = document.getElementById('start-quiz-btn');
-            const questionTextEl = document.getElementById('question-text');
-            const optionsContainerEl = document.getElementById('options-container');
-            const nextBtn = document.getElementById('next-btn');
-            const infoBoxEl = document.getElementById('info-box');
-            const progressBar = document.getElementById('progress-bar');
-            
-            let userProfile = 'lise';
-            let currentQuestionNode = {};
-            let userAnswers = {};
-
-            const quizData = {
-                lise: [
-                    { id: 'start', question: "Nasıl bir üniversite hayatı hedefliyorsun?", key: "egitim-turu", options: [ { text: "Kampüse gidip derslere katılmak (Örgün Eğitim)", value: "orgun" }, { text: "Kendi zamanımı yöneterek, evden okumak (Açıköğretim)", value: "acikogretim" } ], next: (answer) => answer === 'acikogretim' ? 'acikogretim_universiteleri' : 'henuz_hazir_degil' },
-                    { id: 'acikogretim_universiteleri', question: "Harika! Peki hangi Açıköğretim Fakültesi ile daha çok ilgileniyorsun?", key: "okul", options: [ { text: "Anadolu Üniversitesi (AÖF)", value: "anadolu" }, { text: "İstanbul Üniversitesi (AUZEF)", value: "auzef" }, { text: "Atatürk Üniversitesi (ATA-AÖF)", value: "ata-aof" } ], next: (answer) => answer === 'auzef' ? 'auzef_bolumleri' : 'henuz_hazir_degil' },
-                    { id: 'auzef_bolumleri', question: "AUZEF için hangi bölümü düşünüyorsun?", key: "auzef-bolumleri", options: [ { text: "Sosyoloji", value: "sosyoloji" }, { text: "Tarih", value: "tarih" } ], next: () => null },
-                    { id: 'henuz_hazir_degil', question: "Bu dal henüz yapım aşamasında!", key: "bitti", options: [], next: () => null }
-                ]
-            };
-
-            startQuizBtn.addEventListener('click', () => {
-                userProfile = document.querySelector('input[name="user_profile"]:checked').value;
-                profileScreen.style.display = 'none';
-                quizScreen.style.display = 'block';
-                initializeWizard();
-            });
-
-            function initializeWizard() {
-                userAnswers = {};
-                showQuestionById('start');
-            }
-
-            function showQuestionById(id) {
-                currentQuestionNode = quizData[userProfile].find(q => q.id === id);
-                if (!currentQuestionNode) {
-                    alert("Anketin bu dalı burada bitiyor.");
-                    quizScreen.style.display = 'none';
-                    profileScreen.style.display = 'block';
-                    return;
-                }
-
-                questionTextEl.textContent = currentQuestionNode.question;
-                optionsContainerEl.innerHTML = '';
-                infoBoxEl.style.display = 'none';
-
-                if (currentQuestionNode.options.length > 0) {
-                    currentQuestionNode.options.forEach(option => {
-                        const label = document.createElement('label');
-                        label.className = 'option-label';
-                        label.innerHTML = `<input type="radio" name="${currentQuestionNode.key}" value="${option.value}"><span>${option.text}</span>`;
-                        optionsContainerEl.appendChild(label);
-                    });
-                } else {
-                    nextBtn.style.display = 'none';
-                }
-
-                const questionIndex = quizData[userProfile].findIndex(q => q.id === id);
-                const progress = ((questionIndex + 1) / (quizData[userProfile].length - 1)) * 100;
-                progressBar.style.width = `${progress}%`;
-                nextBtn.textContent = currentQuestionNode.next === null ? 'Bitir' : 'Sonraki Soru →';
-            }
-
-            nextBtn.addEventListener('click', () => {
-                const selectedOption = optionsContainerEl.querySelector(`input[name="${currentQuestionNode.key}"]:checked`);
-                if (!selectedOption) {
-                    alert("Lütfen bir seçenek belirleyin.");
-                    return;
-                }
-                userAnswers[currentQuestionNode.key] = selectedOption.value;
-                const nextQuestionId = currentQuestionNode.next(selectedOption.value);
-                showQuestionById(nextQuestionId);
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
