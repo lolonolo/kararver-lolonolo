@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ELEMENTLER VE DEĞİŞKENLER ---
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const sideMenu = document.getElementById('side-menu');
     const profileScreen = document.getElementById('profile-selection-screen');
     const quizScreen = document.getElementById('quiz-screen');
     const startQuizBtn = document.getElementById('start-quiz-btn');
@@ -11,111 +8,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoBoxEl = document.getElementById('info-box');
 
     let userProfile = 'lise';
-    let quizFlow = {};
-    let currentQuestionNode = {};
-    let userAnswers = {};
-
-    // --- SORU VERİTABANI ---
-    const quizData = {
-        lise: [
-            { 
-                id: 'start', 
-                question: "Nasıl bir üniversite hayatı hedefliyorsun?", 
-                key: "egitim-turu", 
-                info: "💡 Örgün eğitim sosyal bir kampüs hayatı sunarken; Açıköğretim daha fazla esneklik ve disiplin gerektirir.", 
-                options: [ 
-                    { text: "Kampüse gidip derslere katılmak (Örgün Eğitim)", value: "orgun" }, 
-                    { text: "Kendi zamanımı yöneterek, evden okumak (Açıköğretim)", value: "acikogretim" } 
-                ], 
-                next: (answer) => answer === 'acikogretim' ? 'acikogretim_universiteleri' : 'holland_test_1' 
-            },
-            { 
-                id: 'acikogretim_universiteleri', 
-                question: "Harika! Peki hangi Açıköğretim Fakültesi ile daha çok ilgileniyorsun?", 
-                key: "acik-ogretim-okullari", // DEĞİŞİKLİK BURADA
-                info: "💡 Türkiye'deki bu üç büyük açıköğretim üniversitesi de kaliteli eğitim sunar. Aralarındaki farklar genellikle bölüm çeşitliliğinde yatar.", 
-                options: [ 
-                    { text: "Anadolu Üniversitesi (AÖF)", value: "anadolu" }, 
-                    { text: "İstanbul Üniversitesi (AUZEF)", value: "auzef" }, 
-                    { text: "Atatürk Üniversitesi (ATA-AÖF)", value: "ata-aof" } 
-                ], 
-                next: () => 'holland_test_1' 
-            },
-            { 
-                id: 'holland_test_1', 
-                question: "Hangisi sana daha çekici geliyor?", 
-                key: "holland_1", 
-                info: "💡 Bu test, ilgi alanlarını ve kişilik tipini anlamamıza yardımcı olacak.", 
-                options: [ { text: "Bir makinenin nasıl çalıştığını anlamak.", value: "R" }, { text: "Birine sorununu çözmede yardım etmek.", value: "S" } ], 
-                next: () => null // Şimdilik anket burada bitiyor
-            }
-        ]
-    };
-
-    // --- OLAY DİNLEYİCİLER ---
-    hamburgerBtn.addEventListener('click', () => sideMenu.classList.toggle('is-open'));
+    let quizQuestions = [];
+    let currentQuestionIndex = 0;
+    
+    const liseQuestions = [
+        {
+            question: "Nasıl bir üniversite hayatı hedefliyorsun?",
+            key: "egitim-turu",
+            info: "💡 **Pro-Tip:** Örgün eğitim sosyal bir kampüs hayatı sunarken; Açıköğretim daha fazla esneklik ve disiplin gerektirir.",
+            options: [
+                { text: "Kampüse gidip derslere katılmak (Örgün Eğitim)", value: "orgun" },
+                { text: "Kendi zamanımı yöneterek, evden okumak (Açıköğretim)", value: "acikogretim" }
+            ]
+        },
+    ];
 
     startQuizBtn.addEventListener('click', () => {
-        userProfile = document.querySelector('input[name="user_profile"]:checked').value;
-        profileScreen.style.display = 'none';
-        quizScreen.style.display = 'block';
-        initializeWizard();
-    });
-
-    optionsContainerEl.addEventListener('click', (e) => {
-        const label = e.target.closest('.option-label');
-        if (label) {
-            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
-            label.classList.add('selected');
-            const radio = label.querySelector('input[type="radio"]');
-            if (radio) { loadInfoContent(currentQuestionNode.key, radio.value); }
+        const selectedProfile = document.querySelector('input[name="user_profile"]:checked');
+        if (selectedProfile) {
+            userProfile = selectedProfile.value;
+            profileScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+            initializeWizard();
+        } else {
+            alert("Lütfen başlamak için bir durum seçin.");
         }
     });
 
-    nextBtn.addEventListener('click', () => {
-        const selectedOption = optionsContainerEl.querySelector(`input[name="${currentQuestionNode.key}"]:checked`);
-        if (!selectedOption) {
-            alert("Lütfen bir seçenek belirleyin.");
-            return;
-        }
-        userAnswers[currentQuestionNode.key] = selectedOption.value;
-        const nextQuestionId = currentQuestionNode.next(selectedOption.value);
-        showQuestionById(nextQuestionId);
-    });
-
-    // --- ANA FONKSİYONLAR ---
     function initializeWizard() {
-        quizFlow = quizData[userProfile] || quizData['lise'];
-        userAnswers = {};
-        showQuestionById('start');
-    }
-
-    function showQuestionById(id) {
-        currentQuestionNode = quizFlow.find(q => q.id === id);
-        if (!currentQuestionNode) {
-            alert("Anket bitti! Cevaplar: " + JSON.stringify(userAnswers));
+        if (userProfile === 'lise') {
+            quizQuestions = liseQuestions;
+        } else {
+            alert("Bu profil için anket yakında eklenecektir.");
             quizScreen.style.display = 'none';
             profileScreen.style.display = 'block';
             return;
         }
+        currentQuestionIndex = 0;
+        showQuestion();
+    }
 
-        questionTextEl.textContent = currentQuestionNode.question;
+    function showQuestion() {
+        const currentQuestion = quizQuestions[currentQuestionIndex];
+        questionTextEl.textContent = currentQuestion.question;
+        
         optionsContainerEl.innerHTML = '';
-        currentQuestionNode.options.forEach(option => {
+        currentQuestion.options.forEach(option => {
             const label = document.createElement('label');
             label.className = 'option-label';
-            label.innerHTML = `<input type="radio" name="${currentQuestionNode.key}" value="${option.value}"><span>${option.text}</span>`;
+            label.innerHTML = `<input type="radio" name="q${currentQuestionIndex}" value="${option.value}"><span>${option.text}</span>`;
             optionsContainerEl.appendChild(label);
         });
 
-        if (currentQuestionNode.info) {
-            infoBoxEl.innerHTML = currentQuestionNode.info;
+        if (currentQuestion.info) {
+            infoBoxEl.innerHTML = currentQuestion.info;
             infoBoxEl.style.display = 'block';
         } else {
             infoBoxEl.style.display = 'none';
         }
-
-        nextBtn.textContent = currentQuestionNode.next(null) === null ? 'Sonuçları Gör ✨' : 'Sonraki Soru →';
     }
 
     async function loadInfoContent(questionKey, optionValue) {
@@ -128,7 +78,29 @@ document.addEventListener('DOMContentLoaded', () => {
             infoBoxEl.style.display = 'block';
         } catch (error) {
             console.error("Bilgi içeriği yüklenemedi:", error);
-            infoBoxEl.innerHTML = currentQuestionNode.info || '';
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            if (currentQuestion.info) {
+                 infoBoxEl.innerHTML = currentQuestion.info;
+            } else {
+                infoBoxEl.style.display = 'none';
+            }
         }
     }
+
+    optionsContainerEl.addEventListener('click', (e) => {
+        const label = e.target.closest('.option-label');
+        if (label) {
+            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+            const radio = label.querySelector('input[type="radio"]');
+            if (radio) {
+                const questionKey = quizQuestions[currentQuestionIndex].key;
+                loadInfoContent(questionKey, radio.value);
+            }
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        alert("Harika! Artık doğru yapıdayız. Bir sonraki adımda soruları ilerleteceğiz.");
+    });
 });
