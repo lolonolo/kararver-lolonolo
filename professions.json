@@ -2,36 +2,49 @@
     {
       "name": "Yazılım Geliştirici",
       "puan_turu": "sayisal", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik",
-      "sevmedigin_yon": "pratik", "gelecek_hedefi": "sirket"
+      "sevmedigin_yon": "pratik", "gelecek_hedefi": "sirket",
+      "tatminsizlik": "gelisim_yok", "yeni_kariyer_hedefi": "yaraticilik"
     },
     {
       "name": "Akademisyen / Araştırmacı",
       "puan_turu": "sayisal", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik",
-      "sevmedigin_yon": "teorik", "gelecek_hedefi": "akademi"
+      "sevmedigin_yon": "teorik", "gelecek_hedefi": "akademi",
+      "tatminsizlik": "anlamsiz_is", "yeni_kariyer_hedefi": "fayda_saglama"
     },
     {
       "name": "Avukat",
       "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
-      "sevmedigin_yon": "pratik", "gelecek_hedefi": "serbest"
+      "sevmedigin_yon": "pratik", "gelecek_hedefi": "serbest",
+      "tatminsizlik": "kazanc", "yeni_kariyer_hedefi": "kazanc"
     },
     {
       "name": "Grafik Tasarımcı",
       "puan_turu": "esit_agirlik", "calisma_ortami": "teknik", "yaklasim_tarzi": "yaratici",
-      "sevmedigin_yon": "pratik", "gelecek_hedefi": "serbest"
+      "sevmedigin_yon": "pratik", "gelecek_hedefi": "serbest",
+      "tatminsizlik": "stres", "yeni_kariyer_hedefi": "yaraticilik"
     },
     {
       "name": "Psikolog",
       "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
-      "sevmedigin_yon": "ilgisiz", "gelecek_hedefi": "insan"
+      "sevmedigin_yon": "ilgisiz", "gelecek_hedefi": "insan_odakli",
+      "tatminsizlik": "anlamsiz_is", "yeni_kariyer_hedefi": "fayda_saglama"
     },
     {
-      "name": "Kamu Yöneticisi",
+      "name": "Kamu Yöneticisi (Memur)",
       "puan_turu": "esit_agirlik", "calisma_ortami": "ofis", "yaklasim_tarzi": "analitik",
-      "sevmedigin_yon": "is_garantisi", "gelecek_hedefi": "kamu"
+      "sevmedigin_yon": "is_garantisi", "gelecek_hedefi": "kamu",
+      "tatminsizlik": "stres", "yeni_kariyer_hedefi": "guvence"
     },
     {
-      "name": "Reklamcı / Halkla İlişkiler Uzmanı",
+      "name": "Reklamcı / Pazarlama Uzmanı",
       "puan_turu": "sozel", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "yaratici",
-      "sevmedigin_yon": "pratik", "gelecek_hedefi": "sirket"
+      "sevmedigin_yon": "pratik", "gelecek_hedefi": "sirket",
+      "tatminsizlik": "stres", "yeni_kariyer_hedefi": "yaraticilik"
+    },
+    {
+        "name": "İnsan Kaynakları Uzmanı",
+        "puan_turu": "esit_agirlik", "calisma_ortami": "insan_odakli", "yaklasim_tarzi": "empati",
+        "sevmedigin_yon": "ilgisiz", "gelecek_hedefi": "sirket",
+        "tatminsizlik": "stres", "yeni_kariyer_hedefi": "fayda_saglama"
     }
 ]
