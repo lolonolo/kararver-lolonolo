@@ -2,48 +2,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- HAMBURGER & SIDE MENU LOGIC ---
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const sideMenu = document.getElementById('side-menu');
-    hamburgerBtn.addEventListener('click', () => {
-        sideMenu.classList.toggle('is-open');
-    });
+    if (hamburgerBtn && sideMenu) {
+        hamburgerBtn.addEventListener('click', () => {
+            sideMenu.classList.toggle('is-open');
+        });
+    }
 
-    // --- SİHİRBAZ VERİTABANI (ÖRNEK) ---
-    const quizQuestions = [
-        {
-            question: "En başarılı olduğun ders grubu hangisi?",
-            key: "puan_turu",
-            options: [
-                { text: "Matematik, Fizik (Sayısal)", value: "sayisal" },
-                { text: "Edebiyat, Tarih (Sözel)", value: "sozel" },
-                { text: "Matematik, Edebiyat (Eşit Ağırlık)", value: "esit_agirlik" },
-                { text: "İngilizce, Almanca (Dil)", value: "dil" }
-            ]
-        },
-        {
-            question: "Nasıl bir çalışma ortamını tercih edersin?",
-            key: "calisma_ortami",
-            options: [
-                { text: "İnsanlarla sürekli iletişim halinde, dinamik bir ortam.", value: "insan_odakli" },
-                { text: "Kendi başıma odaklanabileceğim, sakin bir ofis.", value: "ofis" },
-                { text: "Atölye, laboratuvar veya stüdyo gibi teknik bir ortam.", value: "teknik" },
-                { text: "Masa başında değil, dışarıda, sahada olacağım bir ortam.", value: "saha" }
-            ]
-        },
-        {
-            question: "Bir sorunu çözerken hangi yönün daha ağır basar?",
-            key: "yaklasim_tarzi",
-            options: [
-                { text: "Analitik düşünür, verileri ve mantığı kullanırım.", value: "analitik" },
-                { text: "Yaratıcılığımı ve hayal gücümü kullanırım.", value: "yaratici" },
-                { text: "Empati kurar, insan odaklı çözümler üretirim.", value: "empati" }
-            ]
-        }
-    ];
-    let professions = [];
+    // --- SİHİRBAZ BAŞLANGIÇ EKRANI MANTIĞI ---
+    const profileScreen = document.getElementById('profile-selection-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+    let userProfile = '';
 
-    // --- SİHİRBAZ MANTIĞI ---
-    let currentQuestionIndex = 0;
-    let userAnswers = {};
+    if (startQuizBtn) {
+        startQuizBtn.addEventListener('click', () => {
+            const selectedProfile = document.querySelector('input[name="user_profile"]:checked');
+            if (selectedProfile) {
+                userProfile = selectedProfile.value;
+                console.log("Kullanıcı profili seçildi:", userProfile);
 
+                if(profileScreen) profileScreen.style.display = 'none';
+                if(quizScreen) quizScreen.style.display = 'block';
+
+                initializeWizard();
+            }
+        });
+    }
+    
+    // --- SİHİRBAZIN KENDİSİ ---
     const questionTextEl = document.getElementById('question-text');
     const optionsContainerEl = document.getElementById('options-container');
     const nextBtn = document.getElementById('next-btn');
@@ -51,104 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionContainer = document.getElementById('question-container');
     const resultContainer = document.getElementById('result-container');
 
-    async function initializeWizard() {
-        try {
-            const response = await fetch('professions.json');
-            if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
-            professions = await response.json();
-            showQuestion();
-        } catch (error) {
-            console.error("Meslek veritabanı yüklenemedi:", error);
-            questionContainer.innerHTML = "<h3>Veriler yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</h3>";
-        }
+    // Bu fonksiyon sadece sihirbaz başladığında çağrılacak
+    function initializeWizard() {
+        // Burada, seçilen profile göre farklı soru setleri ve meslek listeleri yüklenebilir.
+        // Bu bir sonraki adımımız olacak. Şimdilik varsayılanı kullanıyoruz.
+        console.log(`Sihirbaz '${userProfile}' profili için başlatılıyor...`);
+        // Asıl sihirbaz mantığını burada başlatabiliriz.
+        // Örneğin: showQuestion(0);
     }
-
-    function showQuestion() {
-        resultContainer.style.display = 'none';
-        questionContainer.style.display = 'block';
-        nextBtn.style.display = 'block';
-
-        const currentQuestion = quizQuestions[currentQuestionIndex];
-        questionTextEl.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
-        
-        optionsContainerEl.innerHTML = '';
-        currentQuestion.options.forEach(option => {
-            const label = document.createElement('label');
-            label.className = 'option-label';
-            label.innerHTML = `<input type="radio" name="q${currentQuestionIndex}" value="${option.value}"><span>${option.text}</span>`;
-            optionsContainerEl.appendChild(label);
-        });
-
-        const progress = ((currentQuestionIndex) / quizQuestions.length) * 100;
-        progressBar.style.width = `${progress}%`;
-
-        if (currentQuestionIndex === quizQuestions.length - 1) {
-            nextBtn.textContent = 'Sonuçları Gör ✨';
-        } else {
-            nextBtn.textContent = 'Sonraki Soru →';
-        }
-    }
-
-    function calculateResults() {
-        professions.forEach(profession => {
-            let score = 0;
-            for (const key in userAnswers) {
-                if (profession[key] === userAnswers[key]) {
-                    score++;
-                }
-            }
-            profession.score = score;
-        });
-        const sortedProfessions = professions.sort((a, b) => b.score - a.score);
-        displayResults(sortedProfessions.slice(0, 3));
-    }
-    
-    function displayResults(results) {
-        questionContainer.style.display = 'none';
-        nextBtn.style.display = 'none';
-        
-        resultContainer.innerHTML = `
-            <h3>Verdiğin cevaplara göre sana en uygun 3 meslek:</h3>
-            <ul class="result-list">
-                ${results.map(result => `<li>${result.name}</li>`).join('')}
-            </ul>
-            <p class="result-info">Bu öneriler, bir başlangıç noktasıdır. Meslekleri daha detaylı araştırmayı unutma!</p>
-            <button id="restart-btn" class="secondary-btn">‹ Tekrar Dene</button>
-        `;
-        resultContainer.style.display = 'block';
-        progressBar.style.width = `100%`;
-        progressBar.style.backgroundColor = '#4caf50';
-
-        document.getElementById('restart-btn').addEventListener('click', () => {
-            currentQuestionIndex = 0;
-            userAnswers = {};
-            showQuestion();
-        });
-    }
-
-    nextBtn.addEventListener('click', () => {
-        const selectedOption = optionsContainerEl.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
-        if (!selectedOption) {
-            alert("Lütfen bir seçenek belirleyin.");
-            return;
-        }
-        const currentKey = quizQuestions[currentQuestionIndex].key;
-        userAnswers[currentKey] = selectedOption.value;
-        currentQuestionIndex++;
-        if (currentQuestionIndex < quizQuestions.length) {
-            showQuestion();
-        } else {
-            calculateResults();
-        }
-    });
-
-    optionsContainerEl.addEventListener('click', (e) => {
-        const label = e.target.closest('.option-label');
-        if (label) {
-            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
-            label.classList.add('selected');
-        }
-    });
-
-    initializeWizard();
 });
