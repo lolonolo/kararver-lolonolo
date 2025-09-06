@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ELEMENTLER ---
+    // --- ELEMENTLER VE DEĞİŞKENLER (Aynı) ---
     const profileScreen = document.getElementById('profile-selection-screen');
     const quizScreen = document.getElementById('quiz-screen');
     const startQuizBtn = document.getElementById('start-quiz-btn');
@@ -8,10 +8,81 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('next-btn');
     const infoBoxEl = document.getElementById('info-box');
     const progressBar = document.getElementById('progress-bar');
-    const resultContainer = document.getElementById('result-container');
     const questionContainer = document.getElementById('question-container');
+    const resultContainer = document.getElementById('result-container');
+    let userProfile = 'lise';
+    let professions = [];
+    let quizFlow = {};
+    let currentQuestionNode = {};
+    let userAnswers = {};
+    const quizData = { /* ... (Aynı) ... */ };
 
-    // --- DEĞİŞKENLER VE VERİTABANI ---
+    // --- ANA FONKSİYONLAR ---
+    
+    // YENİ: displayResults fonksiyonu tamamen değişti
+    function displayResults(results) {
+        questionContainer.style.display = 'none';
+        nextBtn.style.display = 'none';
+        
+        let resultsHTML = '<h3>Verdiğin cevaplara göre sana en uygun 3 meslek:</h3>';
+        
+        results.forEach(result => {
+            // Uyum puanını hesaplayalım (basit bir yüzde olarak)
+            const matchScore = (result.score / Object.keys(userAnswers).length * 100).toFixed(0);
+
+            // Neden önerildiğini gösteren etiketleri bulalım
+            let tagsHTML = '';
+            for (const key in userAnswers) {
+                if (result[key] === userAnswers[key]) {
+                    // Cevap metnini bulmak için soruyu ve seçeneği bul
+                    const question = quizFlow.find(q => q.key === key);
+                    const option = question.options.find(o => o.value === userAnswers[key]);
+                    if(option) {
+                        tagsHTML += `<span class="tag">${option.text.split('(')[0].trim()}</span>`;
+                    }
+                }
+            }
+
+            resultsHTML += `
+                <div class="result-card">
+                    <h4>${result.name}</h4>
+                    <div class="match-score">Sana Uyum Puanı: %${matchScore} 🟢</div>
+                    <p class="description">${result.description || 'Bu meslek hakkında yakında daha fazla bilgi eklenecek.'}</p>
+                    <div class="tags-title">Neden Sana Uygun?</div>
+                    <div class="tags">${tagsHTML}</div>
+                    <button class="primary-btn details-btn">Bu Mesleği Detaylı İncele →</button>
+                </div>
+            `;
+        });
+
+        resultsHTML += '<button id="restart-btn" class="secondary-btn">‹ Ankete Başa Dön</button>';
+        
+        resultContainer.innerHTML = resultsHTML;
+        resultContainer.style.display = 'block';
+        progressBar.style.width = `100%`;
+
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            quizScreen.style.display = 'none';
+            profileScreen.style.display = 'block';
+        });
+    }
+
+    // --- GERİ KALAN TÜM KODLAR ---
+    // (Aşağıdaki tam sürümde hepsi mevcut)
+});
+
+// KARIŞIKLIĞI ÖNLEMEK İÇİN TAM DOSYAYI BURAYA YAPIŞTIRIYORUM
+document.addEventListener('DOMContentLoaded', () => {
+    const profileScreen = document.getElementById('profile-selection-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+    const questionTextEl = document.getElementById('question-text');
+    const optionsContainerEl = document.getElementById('options-container');
+    const nextBtn = document.getElementById('next-btn');
+    const infoBoxEl = document.getElementById('info-box');
+    const progressBar = document.getElementById('progress-bar');
+    const questionContainer = document.getElementById('question-container');
+    const resultContainer = document.getElementById('result-container');
     let userProfile = 'lise';
     let professions = [];
     let quizFlow = {};
@@ -27,12 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    // --- ANA FONKSİYONLAR ---
     async function initializeApp() {
         try {
             const response = await fetch('professions.json');
             professions = await response.json();
-            // Sayfa ilk yüklendiğinde profil seçme ekranını göster
             profileScreen.style.display = 'block';
             quizScreen.style.display = 'none';
         } catch (error) {
@@ -53,27 +122,23 @@ document.addEventListener('DOMContentLoaded', () => {
             calculateResults();
             return;
         }
-
         resultContainer.style.display = 'none';
         questionContainer.style.display = 'block';
         nextBtn.style.display = 'block';
         questionTextEl.textContent = currentQuestionNode.question;
         optionsContainerEl.innerHTML = '';
-
         currentQuestionNode.options.forEach(option => {
             const label = document.createElement('label');
             label.className = 'option-label';
             label.innerHTML = `<input type="radio" name="${currentQuestionNode.key}" value="${option.value}"><span>${option.text}</span>`;
             optionsContainerEl.appendChild(label);
         });
-
         if (currentQuestionNode.info) {
             infoBoxEl.innerHTML = currentQuestionNode.info;
             infoBoxEl.style.display = 'block';
         } else {
             infoBoxEl.style.display = 'none';
         }
-
         const questionIndex = quizFlow.findIndex(q => q.id === id);
         const progress = ((questionIndex) / quizFlow.length) * 100;
         progressBar.style.width = `${progress}%`;
@@ -82,22 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function calculateResults() {
         let hollandAnswers = [userAnswers.holland_1, userAnswers.holland_2, userAnswers.holland_3].filter(Boolean);
-        
         professions.forEach(profession => {
             let score = 0;
-            // Holland kod eşleşmesi için puan ver
             hollandAnswers.forEach(answerCode => {
-                if (profession.holland_codes.includes(answerCode)) {
-                    score += 2; // Ana eşleşmeler daha önemli
+                if (profession.holland_codes && profession.holland_codes.includes(answerCode)) {
+                    score += 1;
                 }
             });
-            // Puan türü eşleşmesi için puan ver
-            if (profession.puan_turu && userAnswers['egitim-turu'] === profession.puan_turu){ // Bu kısmı daha sonra geliştireceğiz
-                score++;
-            }
             profession.score = score;
         });
-
         const sortedProfessions = professions.sort((a, b) => b.score - a.score);
         displayResults(sortedProfessions.slice(0, 3));
     }
@@ -105,10 +163,34 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayResults(results) {
         questionContainer.style.display = 'none';
         nextBtn.style.display = 'none';
-        resultContainer.innerHTML = `<h3>Verdiğin cevaplara göre sana en uygun 3 meslek:</h3><ul class="result-list">${results.map(r => `<li>${r.name}</li>`).join('')}</ul><p class="result-info">Bu öneriler, bir başlangıç noktasıdır.</p><button id="restart-btn" class="secondary-btn">‹ Başa Dön</button>`;
+        let resultsHTML = '<h3>Verdiğin cevaplara göre sana en uygun 3 meslek:</h3>';
+        results.forEach(result => {
+            const totalQuestions = Object.keys(userAnswers).length;
+            const matchScore = totalQuestions > 0 ? (result.score / totalQuestions * 100).toFixed(0) : 0;
+            let tagsHTML = '';
+            for (const key in userAnswers) {
+                const question = quizFlow.find(q => q.key === key);
+                if (question && question.options) {
+                    const option = question.options.find(o => o.value === userAnswers[key]);
+                    if(option && result.holland_codes && result.holland_codes.includes(userAnswers[key])) { // Basit bir eşleşme kontrolü
+                        tagsHTML += `<span class="tag">${option.text.split('(')[0].trim()}</span>`;
+                    }
+                }
+            }
+            resultsHTML += `
+                <div class="result-card">
+                    <h4>${result.name}</h4>
+                    <div class="match-score">Sana Uyum Puanı: %${matchScore} 🟢</div>
+                    <p class="description">${result.description || 'Bu meslek hakkında yakında daha fazla bilgi eklenecek.'}</p>
+                    ${tagsHTML ? '<div class="tags-title">Neden Sana Uygun?</div><div class="tags">' + tagsHTML + '</div>' : ''}
+                    <button class="primary-btn details-btn">Bu Mesleği Detaylı İncele →</button>
+                </div>
+            `;
+        });
+        resultsHTML += '<button id="restart-btn" class="secondary-btn">‹ Ankete Başa Dön</button>';
+        resultContainer.innerHTML = resultsHTML;
         resultContainer.style.display = 'block';
         progressBar.style.width = `100%`;
-
         document.getElementById('restart-btn').addEventListener('click', () => {
             quizScreen.style.display = 'none';
             profileScreen.style.display = 'block';
@@ -119,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const filePath = `content/${questionKey}/${optionValue}.html`;
         try {
             const response = await fetch(filePath);
-            if (!response.ok) { infoBoxEl.innerHTML = currentQuestionNode.info || ''; return; }
+            if (!response.ok) { throw new Error('Dosya bulunamadı.'); }
             const content = await response.text();
             infoBoxEl.innerHTML = content;
             infoBoxEl.style.display = 'block';
@@ -128,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- OLAY DİNLEYİCİLER ---
     startQuizBtn.addEventListener('click', () => {
         userProfile = document.querySelector('input[name="user_profile"]:checked').value;
         profileScreen.style.display = 'none';
@@ -141,9 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (label) {
             document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
             label.classList.add('selected');
-
             const radio = label.querySelector('input[type="radio"]');
-            if (radio && currentQuestionNode.id.startsWith('holland')) {
+            if (radio && currentQuestionNode.key) {
                  loadInfoContent(currentQuestionNode.key, radio.value);
             }
         }
@@ -160,6 +240,5 @@ document.addEventListener('DOMContentLoaded', () => {
         showQuestionById(nextQuestionId);
     });
 
-    // --- UYGULAMAYI BAŞLAT ---
     initializeApp();
 });
