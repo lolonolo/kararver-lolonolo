@@ -21,10 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
             { 
                 id: 'auzef_bolumleri', 
                 question: "AUZEF için hangi bölümü düşünüyorsun?", 
-                key: "auzef",
+                key: "auzef-bolumleri", // Bu anahtar, dosya yolunu oluştururken kullanılacak
                 info: "İlgilendiğin bölüm hakkında bilgi almak için üzerine tıkla.",
                 options: [ 
-                    { text: "Acil Durum Ve Afet Yönetimi (ÖnLisans)", value: "acil-durum-ve-afet-yonetimi-app" },
+                           { text: "Acil Durum Ve Afet Yönetimi (ÖnLisans)", value: "acil-durum-ve-afet-yonetimi-app" },
                     { text: "Adalet", value: "adalet-on-lisans-app" },
                     { text: "Bankacılık Ve Sigortacılık", value: "bankacilik-ve-sigortacilik" },
                     { text: "Bilgisayar Programcılığı", value: "bilgisayar-programciligi" },
@@ -59,13 +59,117 @@ document.addEventListener('DOMContentLoaded', () => {
                     { text: "Web Tasarımı ve Kodlama", value: "web-tasarimi-ve-kodlama" },
                     { text: "Yaşlı Bakımı", value: "yasli-bakimi" },
                     { text: "Yönetim Bilişim Sistemleri Lisans", value: "yonetim-bilisim-sistemleri-lisans" }
+                
                 ], 
-                next: () => null
+                next: () => null 
             },
             { id: 'henuz_hazir_degil', question: "Bu dal henüz yapım aşamasında!", key: "bitti", options: [], next: () => null }
         ]
     };
 
-    // --- OLAY DİNLEYİCİLER VE ANA FONKSİYONLAR (DEĞİŞİKLİK YOK) ---
-    // ... (bir önceki mesajdakiyle aynı)
-};
+    // --- OLAY DİNLEYİCİLER VE ANA FONKSİYONLAR ---
+    
+    // ... (startQuizBtn, initializeWizard, showQuestionById, nextBtn click olayları aynı)
+
+    // GÜNCELLENMİŞ FONKSİYON
+    async function loadInfoContent(questionKey, optionValue) {
+        let filePath = '';
+        
+        // Hangi soruya göre hangi klasör yapısını kullanacağımızı burada belirliyoruz
+        if (questionKey === 'acikogretim-universiteleri') {
+            filePath = `content/acikogretim-universiteleri/${optionValue}/${optionValue}.html`;
+        } else if (questionKey === 'auzef-bolumleri') {
+            filePath = `content/acikogretim-universiteleri/auzef/${optionValue}.html`;
+        } else {
+            // Diğer sorular için (henüz yok ama ileride olabilir)
+            filePath = `content/${questionKey}/${optionValue}.html`;
+        }
+
+        try {
+            const response = await fetch(filePath);
+            if (!response.ok) { throw new Error(`Dosya bulunamadı: ${filePath}`); }
+            const content = await response.text();
+            infoBoxEl.innerHTML = content;
+            infoBoxEl.style.display = 'block';
+        } catch (error) {
+            console.error("Bilgi içeriği yüklenemedi:", error);
+            infoBoxEl.style.display = 'none';
+        }
+    }
+    
+    // ... (Diğer tüm kodlar aynı kalacak) ...
+
+    // KARIŞIKLIĞI ÖNLEMEK İÇİN TAM DOSYAYI BURAYA YAPIŞTIRIYORUM
+    
+    const profileOptionsContainer = document.getElementById('profile-options-container');
+
+    startQuizBtn.addEventListener('click', () => {
+        userProfile = document.querySelector('input[name="user_profile"]:checked').value;
+        profileScreen.style.display = 'none';
+        quizScreen.style.display = 'block';
+        initializeWizard();
+    });
+
+    function initializeWizard() {
+        userAnswers = {};
+        showQuestionById('start');
+    }
+
+    function showQuestionById(id) {
+        currentQuestionNode = quizData[userProfile].find(q => q.id === id);
+        if (!currentQuestionNode) {
+            alert("Bu dalın sonuna geldik!");
+            quizScreen.style.display = 'none';
+            profileScreen.style.display = 'block';
+            return;
+        }
+
+        questionTextEl.textContent = currentQuestionNode.question;
+        optionsContainerEl.innerHTML = '';
+        infoBoxEl.style.display = 'none';
+
+        if(currentQuestionNode.options) {
+            currentQuestionNode.options.forEach(option => {
+                const label = document.createElement('label');
+                label.className = 'option-label';
+                label.innerHTML = `<input type="radio" name="${currentQuestionNode.key}" value="${option.value}"><span>${option.text}</span>`;
+                optionsContainerEl.appendChild(label);
+            });
+        }
+
+        if (currentQuestionNode.info) {
+            infoBoxEl.innerHTML = currentQuestionNode.info;
+            infoBoxEl.style.display = 'block';
+        }
+        
+        const questionIndex = quizData[userProfile].findIndex(q => q.id === id);
+        const progress = ((questionIndex + 1) / (quizData[userProfile].length - 1)) * 100;
+        progressBar.style.width = `${progress}%`;
+        nextBtn.textContent = currentQuestionNode.next(null) === null ? 'Bitir' : 'Sonraki Soru →';
+    }
+
+    optionsContainerEl.addEventListener('click', (e) => {
+        const label = e.target.closest('.option-label');
+        if (label) {
+            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+            const radio = label.querySelector('input[type="radio"]');
+            if (radio) {
+                loadInfoContent(currentQuestionNode.key, radio.value);
+            }
+        }
+    });
+
+    function nextButtonClickHandler() {
+        const selectedOption = optionsContainerEl.querySelector(`input[name="${currentQuestionNode.key}"]:checked`);
+        if (!selectedOption) {
+            alert("Lütfen bir seçenek belirleyin.");
+            return;
+        }
+        userAnswers[currentQuestionNode.key] = selectedOption.value;
+        const nextQuestionId = currentQuestionNode.next(selectedOption.value);
+        showQuestionById(nextQuestionId);
+    }
+    
+    nextBtn.addEventListener('click', nextButtonClickHandler);
+});
