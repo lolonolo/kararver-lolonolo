@@ -8,11 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const optionsContainerEl = document.getElementById('options-container');
     const nextBtn = document.getElementById('next-btn');
     const infoBoxEl = document.getElementById('info-box');
+    const progressBar = document.getElementById('progress-bar');
+    const questionContainer = document.getElementById('question-container');
+    const resultContainer = document.getElementById('result-container');
 
     // --- DEĞİŞKENLER VE VERİTABANI ---
     let userProfile = 'lise';
     let quizQuestions = [];
     let currentQuestionIndex = 0;
+    let userAnswers = {};
 
     const liseQuestions = [
         {
@@ -24,43 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 { text: "Kendi zamanımı yöneterek, evden okumak (Açıköğretim)", value: "acikogretim" }
             ]
         },
-        // Diğer sorular buraya eklenecek
+        // Gelecekteki sorular buraya eklenecek
     ];
 
-    // --- OLAY DİNLEYİCİLER ---
-    startQuizBtn.addEventListener('click', () => {
-        const selectedProfile = document.querySelector('input[name="user_profile"]:checked');
-        if (selectedProfile) {
-            userProfile = selectedProfile.value;
-            profileScreen.style.display = 'none';
-            quizScreen.style.display = 'block';
-            initializeWizard();
-        } else {
-            alert("Lütfen başlamak için bir durum seçin.");
-        }
-    });
-
-    // SEÇENEKLERE TIKLANDIĞINDA ÇALIŞAN GÜNCELLENMİŞ MANTIK
-    optionsContainerEl.addEventListener('click', (e) => {
-        const label = e.target.closest('.option-label');
-        if (label) {
-            // Görsel olarak seçili yapma
-            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
-            label.classList.add('selected');
-
-            // Bilgi kutusunu dinamik olarak değiştirme
-            const radio = label.querySelector('input[type="radio"]');
-            const originalInfo = quizQuestions[currentQuestionIndex].info;
-
-            if (radio && radio.value === 'acikogretim') {
-                infoBoxEl.innerHTML = `💡 <strong>Harika Seçim!</strong> Açıköğretim, disiplinli öğrenciler için müthiş bir fırsattır. Unutma, bu yolda yalnız değilsin! <strong>lolonolo.com</strong>'da seni bekleyen yüz binlerce çıkmış soru, on binlerce deneme sınavı ve tüm ders materyalleri tamamen <strong>ücretsiz!</strong>`;
-            } else {
-                infoBoxEl.innerHTML = originalInfo;
-            }
-        }
-    });
-
     // --- ANA FONKSİYONLAR ---
+
     function initializeWizard() {
         if (userProfile === 'lise') {
             quizQuestions = liseQuestions;
@@ -71,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         currentQuestionIndex = 0;
+        userAnswers = {};
         showQuestion();
     }
 
@@ -86,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             optionsContainerEl.appendChild(label);
         });
 
+        // Başlangıçta genel bilgiyi göster, varsa
         if (currentQuestion.info) {
             infoBoxEl.innerHTML = currentQuestion.info;
             infoBoxEl.style.display = 'block';
@@ -93,4 +67,66 @@ document.addEventListener('DOMContentLoaded', () => {
             infoBoxEl.style.display = 'none';
         }
     }
+
+    async function loadInfoContent(optionValue) {
+        let fileName = '';
+        if (optionValue === 'orgun') {
+            fileName = 'orgun-bilgi.html';
+        } else if (optionValue === 'acikogretim') {
+            fileName = 'acikogretim-bilgi.html';
+        }
+
+        if (fileName) {
+            try {
+                const response = await fetch(fileName);
+                if (!response.ok) { throw new Error('Dosya bulunamadı.'); }
+                const content = await response.text();
+                infoBoxEl.innerHTML = content;
+                infoBoxEl.style.display = 'block';
+            } catch (error) {
+                console.error("Bilgi içeriği yüklenemedi:", error);
+                // Hata durumunda genel bilgiye geri dön
+                const currentQuestion = quizQuestions[currentQuestionIndex];
+                if (currentQuestion.info) {
+                     infoBoxEl.innerHTML = currentQuestion.info;
+                } else {
+                    infoBoxEl.style.display = 'none';
+                }
+            }
+        }
+    }
+
+
+    // --- OLAY DİNLEYİCİLER (EVENT LISTENERS) ---
+
+    startQuizBtn.addEventListener('click', () => {
+        const selectedProfile = document.querySelector('input[name="user_profile"]:checked');
+        if (selectedProfile) {
+            userProfile = selectedProfile.value;
+            profileScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+            initializeWizard();
+        } else {
+            alert("Lütfen başlamak için bir durum seçin.");
+        }
+    });
+
+    optionsContainerEl.addEventListener('click', (e) => {
+        const label = e.target.closest('.option-label');
+        if (label) {
+            // Görsel olarak seçili yapma
+            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+
+            // Bilgi kutusunu dinamik olarak değiştirme
+            const radio = label.querySelector('input[type="radio"]');
+            if (radio) {
+                loadInfoContent(radio.value);
+            }
+        }
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        alert("Harika! Bilgilendirme altyapısı çalışıyor. Bir sonraki adımda soruları ilerleteceğiz.");
+    });
 });
