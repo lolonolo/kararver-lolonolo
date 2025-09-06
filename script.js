@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ELEMENTLER ---
+    //--- HTML ELEMENTLERİ ---
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const sideMenu = document.getElementById('side-menu');
     const profileScreen = document.getElementById('profile-selection-screen');
@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionContainer = document.getElementById('question-container');
     const resultContainer = document.getElementById('result-container');
 
-    // --- DEĞİŞKENLER VE VERİTABANI ---
-    let userProfile = 'lise'; // Varsayılan
+    //--- VERİTABANI VE DEĞİŞKENLER ---
+    let userProfile = '';
     let professions = [];
     let quizQuestions = [];
     let currentQuestionIndex = 0;
@@ -33,7 +33,75 @@ document.addEventListener('DOMContentLoaded', () => {
         mezun: []
     };
 
-    // --- OLAY DİNLEYİCİLER (EVENT LISTENERS) ---
+    //--- FONKSİYONLAR ---
+    async function initializeWizard() {
+        try {
+            const response = await fetch('professions.json');
+            professions = await response.json();
+            quizQuestions = questionsByProfile[userProfile] || questionsByProfile['lise'];
+
+            if (quizQuestions.length === 0) {
+                alert("Bu profil için henüz anket hazırlanmamıştır.");
+                quizScreen.style.display = 'none';
+                profileScreen.style.display = 'block';
+                return;
+            }
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            showQuestion();
+        } catch (error) {
+            console.error("Meslek veritabanı yüklenemedi:", error);
+            if(questionContainer) questionContainer.innerHTML = "<h3>Veriler yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</h3>";
+        }
+    }
+
+    function showQuestion() {
+        resultContainer.style.display = 'none';
+        questionContainer.style.display = 'block';
+        nextBtn.style.display = 'block';
+        const currentQuestion = quizQuestions[currentQuestionIndex];
+        questionTextEl.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+        optionsContainerEl.innerHTML = '';
+        currentQuestion.options.forEach(option => {
+            const label = document.createElement('label');
+            label.className = 'option-label';
+            label.innerHTML = `<input type="radio" name="q${currentQuestionIndex}" value="${option.value}"><span>${option.text}</span>`;
+            optionsContainerEl.appendChild(label);
+        });
+        const progress = ((currentQuestionIndex) / quizQuestions.length) * 100;
+        progressBar.style.width = `${progress}%`;
+        if (currentQuestionIndex === quizQuestions.length - 1) {
+            nextBtn.textContent = 'Sonuçları Gör ✨';
+        } else {
+            nextBtn.textContent = 'Sonraki Soru →';
+        }
+    }
+
+    function calculateResults() {
+        professions.forEach(profession => {
+            let score = 0;
+            for (const key in userAnswers) {
+                if (profession[key] === userAnswers[key]) { score++; }
+            }
+            profession.score = score;
+        });
+        const sortedProfessions = professions.sort((a, b) => b.score - a.score);
+        displayResults(sortedProfessions.slice(0, 3));
+    }
+
+    function displayResults(results) {
+        questionContainer.style.display = 'none';
+        nextBtn.style.display = 'none';
+        resultContainer.innerHTML = `<h3>Verdiğin cevaplara göre sana en uygun 3 meslek:</h3><ul class="result-list">${results.map(r => `<li>${r.name}</li>`).join('')}</ul><p class="result-info">Bu öneriler, bir başlangıç noktasıdır.</p><button id="restart-btn" class="secondary-btn">‹ Başa Dön</button>`;
+        resultContainer.style.display = 'block';
+        progressBar.style.width = `100%`;
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            quizScreen.style.display = 'none';
+            profileScreen.style.display = 'block';
+        });
+    }
+
+    //--- OLAY DİNLEYİCİLER (EVENT LISTENERS) ---
     hamburgerBtn.addEventListener('click', () => sideMenu.classList.toggle('is-open'));
 
     profileOptionsContainer.addEventListener('click', (e) => {
@@ -79,74 +147,4 @@ document.addEventListener('DOMContentLoaded', () => {
             label.classList.add('selected');
         }
     });
-
-    // --- ANA FONKSİYONLAR ---
-    async function initializeWizard() {
-        try {
-            const response = await fetch('professions.json');
-            professions = await response.json();
-            quizQuestions = questionsByProfile[userProfile] || questionsByProfile['lise'];
-
-            if (quizQuestions.length === 0) {
-                alert("Bu profil için henüz anket hazırlanmamıştır.");
-                quizScreen.style.display = 'none';
-                profileScreen.style.display = 'block';
-                return;
-            }
-            currentQuestionIndex = 0;
-            userAnswers = {};
-            showQuestion();
-        } catch (error) {
-            console.error("Meslek veritabanı yüklenemedi:", error);
-            questionContainer.innerHTML = "<h3>Veriler yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</h3>";
-        }
-    }
-
-    function showQuestion() {
-        resultContainer.style.display = 'none';
-        questionContainer.style.display = 'block';
-        nextBtn.style.display = 'block';
-        const currentQuestion = quizQuestions[currentQuestionIndex];
-        questionTextEl.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
-        optionsContainerEl.innerHTML = '';
-        currentQuestion.options.forEach(option => {
-            const label = document.createElement('label');
-            label.className = 'option-label';
-            label.innerHTML = `<input type="radio" name="q${currentQuestionIndex}" value="${option.value}"><span>${option.text}</span>`;
-            optionsContainerEl.appendChild(label);
-        });
-        const progress = ((currentQuestionIndex) / quizQuestions.length) * 100;
-        progressBar.style.width = `${progress}%`;
-        if (currentQuestionIndex === quizQuestions.length - 1) {
-            nextBtn.textContent = 'Sonuçları Gör ✨';
-        } else {
-            nextBtn.textContent = 'Sonraki Soru →';
-        }
-    }
-
-    function calculateResults() {
-        professions.forEach(profession => {
-            let score = 0;
-            for (const key in userAnswers) {
-                if (profession[key] === userAnswers[key]) {
-                    score++;
-                }
-            }
-            profession.score = score;
-        });
-        const sortedProfessions = professions.sort((a, b) => b.score - a.score);
-        displayResults(sortedProfessions.slice(0, 3));
-    }
-    
-    function displayResults(results) {
-        questionContainer.style.display = 'none';
-        nextBtn.style.display = 'none';
-        resultContainer.innerHTML = `<h3>Verdiğin cevaplara göre sana en uygun 3 meslek:</h3><ul class="result-list">${results.map(r => `<li>${r.name}</li>`).join('')}</ul><p class="result-info">Bu öneriler, bir başlangıç noktasıdır.</p><button id="restart-btn" class="secondary-btn">‹ Başa Dön</button>`;
-        resultContainer.style.display = 'block';
-        progressBar.style.width = `100%`;
-        document.getElementById('restart-btn').addEventListener('click', () => {
-            quizScreen.style.display = 'none';
-            profileScreen.style.display = 'block';
-        });
-    }
 });
