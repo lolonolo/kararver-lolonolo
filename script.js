@@ -37,8 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     { text: "İstanbul Üniversitesi (AUZEF)", value: "auzef" }, 
                     { text: "Atatürk Üniversitesi (ATA-AÖF)", value: "ata-aof" } 
                 ], 
-                next: (answer) => answer === 'auzef' ? 'auzef_bolumleri' : 'henuz_hazir_degil'
+                next: (answer) => {
+    if (answer === 'auzef') return 'auzef_bolumleri';
+    if (answer === 'anadolu') return 'anadolu_bolumleri';
+    if (answer === 'ata-aof') return 'ataaof_bolumleri';
+    return 'henuz_hazir_degil';
+}
+
             },
+            // --- Auzef ---
             { 
                 id: 'auzef_bolumleri', 
                 question: "AUZEF için hangi bölümü düşünüyorsun?", 
@@ -83,6 +90,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 ], 
                 next: () => null
             },
+            // --- Anadolu Üniversitesi ---
+{ 
+    id: 'anadolu_bolumleri',
+    question: "Anadolu Üniversitesi AÖF için hangi bölümü düşünüyorsun?", 
+    key: "anadolu",
+    info: "👉 Bölümleri buraya sen manuel olarak ekleyeceksin.",
+    options: [
+        // { text: "İşletme", value: "isletme" },
+        // { text: "İktisat", value: "iktisat" }
+    ], 
+    next: () => null
+},
+
+// --- Atatürk Üniversitesi ---
+{ 
+    id: 'ataaof_bolumleri',
+    question: "Atatürk Üniversitesi ATA-AÖF için hangi bölümü düşünüyorsun?", 
+    key: "ataaof",
+    info: "👉 Bölümleri buraya sen manuel olarak ekleyeceksin.",
+    options: [
+        // { text: "Sağlık Yönetimi", value: "saglik-yonetimi" },
+        // { text: "Sosyoloji", value: "sosyoloji" }
+    ], 
+    next: () => null
+},
+
             { 
                 id: 'henuz_hazir_degil', 
                 question: "Bu dal henüz yapım aşamasında!", 
@@ -135,9 +168,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentQuestionNode || currentQuestionNode.next === null) {
             // Sonuç veya bitiş ekranı mantığı
             questionTextEl.textContent = "Bu dalı tamamladın!";
-            if(currentQuestionNode && currentQuestionNode.id === 'auzef_bolumleri') {
-                 optionsContainerEl.innerHTML = `<p>Seçtiğin bölümle ilgili detayları araştırabilirsin. Sihirbazın bu dalı tamamlandı.</p>`;
-            } else if (currentQuestionNode) {
+
+           if (currentQuestionNode && 
+   (currentQuestionNode.id === 'auzef_bolumleri' 
+ || currentQuestionNode.id === 'anadolu_bolumleri' 
+ || currentQuestionNode.id === 'ataaof_bolumleri')) {
+     optionsContainerEl.innerHTML = `<p>Seçtiğin bölümle ilgili detayları araştırabilirsin. Sihirbazın bu dalı tamamlandı.</p>`;
+}
+
+
+
+
+            else if (currentQuestionNode) {
                  optionsContainerEl.innerHTML = `<p>${currentQuestionNode.question}</p>`;
             }
             
@@ -181,9 +223,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (questionKey === 'acikogretim-universiteleri') {
             filePath = `content/acikogretim-universiteleri/${optionValue}/${optionValue}.html`;
-        } else if (questionKey === 'auzef-bolumleri' || questionKey === 'auzef') {
-            filePath = `content/acikogretim-universiteleri/auzef/${optionValue}.html`;
-        } else {
+        } 
+
+
+       else if (questionKey === 'anadolu' || questionKey === 'anadolu_bolumleri') {
+    filePath = `content/acikogretim-universiteleri/anadolu/${optionValue}.html`;
+} else if (questionKey === 'ataaof' || questionKey === 'ataaof_bolumleri') {
+    filePath = `content/acikogretim-universiteleri/ataaof/${optionValue}.html`;
+}
+
+
+        else {
             filePath = `content/${questionKey}/${optionValue}.html`;
         }
 
